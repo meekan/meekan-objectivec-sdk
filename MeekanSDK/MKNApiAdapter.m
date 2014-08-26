@@ -37,15 +37,19 @@
 }
 
 -(HTTPEndpoint *)createMeetingUsing:(MeetingDetails *)details {
+    return [self endpointForMeetingDetails:details];
+}
+
+-(HTTPEndpoint *)endpointForMeetingDetails:(MeetingDetails *)details {
     NSMutableDictionary *params = [NSMutableDictionary dictionary];
     HTTPEndpoint *endpoint = [[HTTPEndpoint alloc]init];
-
+    
     if ([details.accountId length] == 0 && details.durationInMinutes == 0) {
         return nil;
     }
-//
-//    @property (nonatomic, strong) MeetingParticipants *participants;
-//    
+    //
+    //    @property (nonatomic, strong) MeetingParticipants *participants;
+    //
     [self setValue:details.accountId toKey:@"account_id" inParameters:params];
     [self setValue:details.title toKey:@"title" inParameters:params];
     [self setValue:details.calendarInAccount toKey:@"calendar_id" inParameters:params];
@@ -103,6 +107,9 @@
     return endpoint;
 }
 
+-(HTTPEndpoint *)updateMeetingUsing:(MeetingDetails *)details {
+    return [self endpointForMeetingDetails:details];
+}
 
 -(void)setValue:(NSString *)value toKey:(NSString *)keyName inParameters:(NSMutableDictionary *)params {
     if (value && [value length] != 0) {
@@ -111,6 +118,14 @@
 }
 
 -(MeetingServerResponse *)parseCreateMeetingResponseFrom:(id)serverResponse andError:(NSError *__autoreleasing *)error {
+    return [self parseMeetingChangeResponseFrom:serverResponse andError:error];
+}
+
+-(MeetingServerResponse *)parseUpdateMeetingResponseFrom:(id)serverResponse andError:(NSError *__autoreleasing *)error {
+    return [self parseMeetingChangeResponseFrom:serverResponse andError:error];
+}
+
+-(MeetingServerResponse *)parseMeetingChangeResponseFrom:(id)serverResponse andError:(NSError *__autoreleasing *)error {
     NSDictionary *data = [self getDataFromResponse:serverResponse orError:error];
     MeetingServerResponse *response = nil;
     if (!*error && data) {

@@ -20,10 +20,12 @@
 
 @optional
 - (HTTPEndpoint *)createMeetingUsing:(MeetingDetails *)details;
+- (HTTPEndpoint *)updateMeetingUsing:(MeetingDetails *)details;
 /**
  Parses the result into an object. If there is an error, returns nil and in the NSError
  */
 - (MeetingServerResponse *)parseCreateMeetingResponseFrom:(id)serverResponse andError:(NSError * __autoreleasing *)error;
+- (MeetingServerResponse *)parseUpdateMeetingResponseFrom:(id)serverResponse andError:(NSError * __autoreleasing *)error;
 @end
 
 @interface ApiV1Adapter : NSObject <ApiAdapter>

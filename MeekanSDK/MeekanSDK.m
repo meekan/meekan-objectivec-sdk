@@ -71,7 +71,7 @@ static MeekanSDK *sharedInstance = nil;
             }];
         } else {
             NSError *err = [NSError errorWithDomain:MEEKAN_CLIENT_ERROR_DOMAIN code:INVALID_PARAMETERS
-                                           userInfo:@{NSLocalizedDescriptionKey: [NSString stringWithFormat:@"Create Meeting is not supported in adapter %@",self.apiAdapter]}];
+                                           userInfo:@{NSLocalizedDescriptionKey: [NSString stringWithFormat:@"Please review required parameters for Create Meeting %@",self.apiAdapter]}];
             errorCallback(err);
         }
     } else {
@@ -81,8 +81,35 @@ static MeekanSDK *sharedInstance = nil;
     }
 }
 
--(void)updateMeeting:(MeetingDetails *)meeting onSuccess:(MeetingResponseSuccess)success onError:(MeekanResponseError)error {
-    
+-(void)updateMeeting:(MeetingDetails *)meeting onSuccess:(MeetingResponseSuccess)successCallback onError:(MeekanResponseError)errorCallback {
+    if ([self.apiAdapter respondsToSelector:@selector(updateMeetingUsing:)]) {
+        HTTPEndpoint *endpoint = [self.apiAdapter updateMeetingUsing:meeting];
+        if (endpoint) {
+            [self.manager POST:endpoint.path parameters:endpoint.parameters success:^(NSURLSessionDataTask *task, id responseObject) {
+                NSError *errorInRespone = [self.apiAdapter checkIfError:responseObject];
+                if (!errorInRespone) {
+                    MeetingServerResponse *response = [self.apiAdapter parseUpdateMeetingResponseFrom:responseObject andError:&errorInRespone];
+                    if (!errorInRespone) {
+                        successCallback(response);
+                    } else {
+                        errorCallback(errorInRespone);
+                    }
+                } else {
+                    errorCallback(errorInRespone);
+                }
+            } failure:^(NSURLSessionDataTask *task, NSError *error) {
+                errorCallback(error);
+            }];
+        } else {
+            NSError *err = [NSError errorWithDomain:MEEKAN_CLIENT_ERROR_DOMAIN code:INVALID_PARAMETERS
+                                           userInfo:@{NSLocalizedDescriptionKey: [NSString stringWithFormat:@"Please review required parameters for Update Meeting %@",self.apiAdapter]}];
+            errorCallback(err);
+        }
+    } else {
+        NSError *err = [NSError errorWithDomain:MEEKAN_CLIENT_ERROR_DOMAIN code:NOT_IMPLEMENTED_IN_THIS_SDK
+                                       userInfo:@{NSLocalizedDescriptionKey: [NSString stringWithFormat:@"Update Meeting is not supported in adapter %@",self.apiAdapter]}];
+        errorCallback(err);
+    }
 }
 
 @end
