@@ -14,7 +14,7 @@
 static BOOL hasEntered;
 
 @interface MeekanSDKTests : XCTestCase
-
+@property (nonatomic, strong) MeekanSDK *sdk;
 @end
 
 @implementation MeekanSDKTests
@@ -22,7 +22,21 @@ static BOOL hasEntered;
 - (void)setUp
 {
     [super setUp];
-    // Put setup code here. This method is called before the invocation of each test method in the class.
+    NSHTTPCookie *session = [NSHTTPCookie cookieWithProperties:
+                             @{NSHTTPCookieName: @"session",
+                               NSHTTPCookiePath: @"/",
+                               NSHTTPCookieValue: @"eyJnb29nbGVfb2F1dGgyIjoie1wibGFzdF9uYW1lXCI6IFwiTWVla2FuXCIsIFwiZW1haWxcIjogXCJleWFsQG1lZWthbi5jb21cIiwgXCJmdWxsX25hbWVcIjogXCJFeWFsIE1lZWthblwiLCBcImlkXCI6IFwiMTE1NzY1MTM3NTk4MDEyNzgyMzE2XCIsIFwiZmlyc3RfbmFtZVwiOiBcIkV5YWxcIn0iLCJfbWVzc2FnZXMiOltbIldlbGNvbWUhICBZb3UgaGF2ZSBiZWVuIHJlZ2lzdGVyZWQgYXMgYSBuZXcgdXNlciBhbmQgbG9nZ2VkIGluIHRocm91Z2ggR29vZ2xlIE9BdXRoMi4iLCJzdWNjZXNzIl1dfQ==|1409040847|19cb45250f110ca0ecbff3c63344e49a0f87bfe5",
+                               NSHTTPCookieVersion: @"1",
+                               NSHTTPCookieDomain: @"localhost"}];
+    NSHTTPCookie *sessionName = [NSHTTPCookie cookieWithProperties:
+                                 @{NSHTTPCookieName: @"session_name",
+                                   NSHTTPCookiePath: @"/",
+                                   NSHTTPCookieValue: @"eyJfdXNlciI6WzU2Mjk0OTk1MzQyMTMxMjAsMSwiZkM1cHFiaVRNYnJJdWlrdXdWak1mZiIsMTQwOTA0MDg0NiwxNDA5MDQwODQ2XX0=|1409040918|264c90c68a84e02582f8cff09fa2a051d14d03e1",
+                                   NSHTTPCookieVersion: @"1",
+                                   NSHTTPCookieDomain: @"localhost"}];
+    [[NSHTTPCookieStorage sharedHTTPCookieStorage] setCookie:session];
+    [[NSHTTPCookieStorage sharedHTTPCookieStorage] setCookie:sessionName];
+    self.sdk =[MeekanSDK sharedInstanceWithApiKey:@"AnyKey"];
 }
 
 - (void)tearDown
@@ -31,16 +45,24 @@ static BOOL hasEntered;
     [super tearDown];
 }
 
-- (void)testExample
+- (void)testCreateMeeting
 {
-        MeekanSDK *sdk = [MeekanSDK sharedInstanceWithApiKey:@"AnyKey"];
-//    NewTestClass *cl = [[NewTestClass alloc]init];
-//    MeetingDetails *details = [[MeetingDetails alloc]init];
-//    details.accountId = @"4785074604081152";
-//    details.title = @"Test";
-//    details.durationInMinutes = 10;
-//    
+
+    MeetingDetails *details = [[MeetingDetails alloc]init];
+    details.accountId = @"4785074604081152";
+    details.title = @"Test";
+    details.durationInMinutes = 10;
     
+    [self startAsyncTest];
+    [self.sdk createMeeting:details onSuccess:^(MeetingServerResponse *details) {
+        XCTAssertNotNil(details, @"Expected returned details");
+        XCTAssertNotNil(details.meetingId, @"Expected Created meeting ID");
+        [self endAsyncTest];
+    } onError:^(NSError *err) {
+        XCTFail(@"Unexpected error: %@", err);
+        [self endAsyncTest];
+    }];
+    [self maximumDelayForAsyncTest:60];
 }
 
 

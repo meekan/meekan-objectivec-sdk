@@ -57,7 +57,9 @@
     [params setObject:@(details.repeatInterval) forKey:@"repeat_interval"];
     
     [self setValue:details.timeSlotDescription toKey:@"time_slots_desc" inParameters:params];
-    [params setObject:details.slots forKey:@"slot[]"];
+    if ([details.slots count]) {
+        [params setObject:details.slots forKey:@"slot[]"];
+    }
     
     [params setObject:@(details.durationInMinutes) forKey:@"duration"];
     
@@ -111,7 +113,7 @@
 -(MeetingServerResponse *)parseCreateMeetingResponseFrom:(id)serverResponse andError:(NSError *__autoreleasing *)error {
     NSDictionary *data = [self getDataFromResponse:serverResponse orError:error];
     MeetingServerResponse *response = nil;
-    if (!error && data) {
+    if (!*error && data) {
         NSString *meetingId = [data objectForKey:@"meeting_id"];
         NSArray *remote_ids = [data objectForKey:@"remote_id"];
         if ([meetingId length]) {

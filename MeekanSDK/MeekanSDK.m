@@ -40,10 +40,11 @@ static MeekanSDK *sharedInstance = nil;
     if (self = [self init]) {
         self.apiKey = apiKey;
         self.apiAdapter = [[ApiV1Adapter alloc]init];
-        NSURL *url = [NSURL URLWithString:API_URL];
         self.manager = [[AFHTTPSessionManager alloc]initWithBaseURL:[NSURL URLWithString:API_URL]];
-        self.manager.requestSerializer = [AFJSONRequestSerializer serializer];
+        self.manager.requestSerializer = [AFHTTPRequestSerializer serializer];
+        [self.manager.requestSerializer setValue:[NSString stringWithFormat:@"Meekan %@", self.apiKey] forHTTPHeaderField:@"Authorization"];
         self.manager.responseSerializer = [AFJSONResponseSerializer serializer];
+
     }
     
     return self;
@@ -53,23 +54,21 @@ static MeekanSDK *sharedInstance = nil;
     if ([self.apiAdapter respondsToSelector:@selector(createMeetingUsing:)]) {
         HTTPEndpoint *endpoint = [self.apiAdapter createMeetingUsing:meeting];
         if (endpoint) {
-//            [self.manager GET:endpoint.path parameters:endpoint.parameters success:^(NSURLSessionDataTask *task, id responseObject) {
-//                NSError *errorInRespone = [self.apiAdapter checkIfError:responseObject];
-//                if (!errorInRespone) {
-//                    
-//                } else {
-//                    errorCallback(errorInRespone);
-//                }
-//                if (responseObject != nil && [responseObject isKindOfClass:[NSDictionary class]]) {
-//                    
-//                    // Find error code and message
-//                    
-//                } else {
-//
-//                }
-//            } failure:^(NSURLSessionDataTask *task, NSError *error) {
-//                errorCallback(error);
-//            }];
+            [self.manager POST:endpoint.path parameters:endpoint.parameters success:^(NSURLSessionDataTask *task, id responseObject) {
+                NSError *errorInRespone = [self.apiAdapter checkIfError:responseObject];
+                if (!errorInRespone) {
+                    MeetingServerResponse *response = [self.apiAdapter parseCreateMeetingResponseFrom:responseObject andError:&errorInRespone];
+                    if (!errorInRespone) {
+                        successCallback(response);
+                    } else {
+                        errorCallback(errorInRespone);
+                    }
+                } else {
+                    errorCallback(errorInRespone);
+                }
+            } failure:^(NSURLSessionDataTask *task, NSError *error) {
+                errorCallback(error);
+            }];
         } else {
             NSError *err = [NSError errorWithDomain:MEEKAN_CLIENT_ERROR_DOMAIN code:INVALID_PARAMETERS
                                            userInfo:@{NSLocalizedDescriptionKey: [NSString stringWithFormat:@"Create Meeting is not supported in adapter %@",self.apiAdapter]}];
