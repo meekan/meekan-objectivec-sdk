@@ -7,7 +7,7 @@
 //
 
 #import "MeekanSDK.h"
-#import "AFNetworking/AFNetworking.h"
+#import "AFNetworking.h"
 
 @interface MeekanSDK ()
 @property (nonatomic, copy) NSString *apiKey;
@@ -41,9 +41,9 @@ static MeekanSDK *sharedInstance = nil;
         self.apiKey = apiKey;
         self.apiAdapter = [[ApiV1Adapter alloc]init];
         NSURL *url = [NSURL URLWithString:API_URL];
-//        self.manager = [[AFHTTPSessionManager alloc]initWithBaseURL:[NSURL URLWithString:API_URL]];
-//        self.manager.requestSerializer = [AFJSONRequestSerializer serializer];
-//        self.manager.responseSerializer = [AFJSONResponseSerializer serializer];
+        self.manager = [[AFHTTPSessionManager alloc]initWithBaseURL:[NSURL URLWithString:API_URL]];
+        self.manager.requestSerializer = [AFJSONRequestSerializer serializer];
+        self.manager.responseSerializer = [AFJSONResponseSerializer serializer];
     }
     
     return self;

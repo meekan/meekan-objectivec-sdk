@@ -11,6 +11,9 @@
 		D7B2814919AC6CD100AA4E95 /* MeekanSDK.m in Sources */ = {isa = PBXBuildFile; fileRef = D7B2814419AC6CD100AA4E95 /* MeekanSDK.m */; };
 		D7B2814A19AC6CD100AA4E95 /* MKNApiAdapter.m in Sources */ = {isa = PBXBuildFile; fileRef = D7B2814619AC6CD100AA4E95 /* MKNApiAdapter.m */; };
 		D7B2814B19AC6CD100AA4E95 /* MKNParameters.m in Sources */ = {isa = PBXBuildFile; fileRef = D7B2814819AC6CD100AA4E95 /* MKNParameters.m */; };
+		D7C5E1F719AC740F00ACB0E4 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D7C5E1F619AC740F00ACB0E4 /* MobileCoreServices.framework */; };
+		D7C5E1F919AC741A00ACB0E4 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D7C5E1F819AC741A00ACB0E4 /* SystemConfiguration.framework */; };
+		D7C5E1FB19AC743C00ACB0E4 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D7C5E1FA19AC743C00ACB0E4 /* CoreGraphics.framework */; };
 		D7F23B6619AC6A9600F3EE7B /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D7F23B6519AC6A9600F3EE7B /* Foundation.framework */; };
 		D7F23B7419AC6A9600F3EE7B /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D7F23B7319AC6A9600F3EE7B /* XCTest.framework */; };
 		D7F23B7519AC6A9600F3EE7B /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D7F23B6519AC6A9600F3EE7B /* Foundation.framework */; };
@@ -51,6 +54,9 @@
 		D7B2814619AC6CD100AA4E95 /* MKNApiAdapter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MKNApiAdapter.m; sourceTree = "<group>"; };
 		D7B2814719AC6CD100AA4E95 /* MKNParameters.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MKNParameters.h; sourceTree = "<group>"; };
 		D7B2814819AC6CD100AA4E95 /* MKNParameters.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MKNParameters.m; sourceTree = "<group>"; };
+		D7C5E1F619AC740F00ACB0E4 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
+		D7C5E1F819AC741A00ACB0E4 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		D7C5E1FA19AC743C00ACB0E4 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		D7F23B6219AC6A9600F3EE7B /* libMeekanSDK.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libMeekanSDK.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		D7F23B6519AC6A9600F3EE7B /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		D7F23B6919AC6A9600F3EE7B /* MeekanSDK-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "MeekanSDK-Prefix.pch"; sourceTree = "<group>"; };
@@ -76,6 +82,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D7C5E1FB19AC743C00ACB0E4 /* CoreGraphics.framework in Frameworks */,
+				D7C5E1F919AC741A00ACB0E4 /* SystemConfiguration.framework in Frameworks */,
+				D7C5E1F719AC740F00ACB0E4 /* MobileCoreServices.framework in Frameworks */,
 				D7F23B7419AC6A9600F3EE7B /* XCTest.framework in Frameworks */,
 				D7F23B7719AC6A9600F3EE7B /* UIKit.framework in Frameworks */,
 				D7F23B7519AC6A9600F3EE7B /* Foundation.framework in Frameworks */,
@@ -109,6 +118,9 @@
 		D7F23B6419AC6A9600F3EE7B /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				D7C5E1FA19AC743C00ACB0E4 /* CoreGraphics.framework */,
+				D7C5E1F819AC741A00ACB0E4 /* SystemConfiguration.framework */,
+				D7C5E1F619AC740F00ACB0E4 /* MobileCoreServices.framework */,
 				D7F23B6519AC6A9600F3EE7B /* Foundation.framework */,
 				D7F23B7319AC6A9600F3EE7B /* XCTest.framework */,
 				D7F23B7619AC6A9600F3EE7B /* UIKit.framework */,
