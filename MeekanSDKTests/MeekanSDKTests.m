@@ -1,12 +1,17 @@
 //
 //  MeekanSDKTests.m
-//  MeekanSDKTests
+//  MeekanSDK
 //
-//  Created by Eyal Yavor on 26/8/14.
+//  Created by Eyal Yavor on 25/8/14.
 //  Copyright (c) 2014 Meekan. All rights reserved.
 //
 
 #import <XCTest/XCTest.h>
+#import "MeekanSDK.h"
+//#import "MeekanSDK/MKNApiAdapter.h"
+//#import "MeekanSDK/MKNParameters.h"
+
+static BOOL hasEntered;
 
 @interface MeekanSDKTests : XCTestCase
 
@@ -28,7 +33,38 @@
 
 - (void)testExample
 {
-    XCTFail(@"No implementation for \"%s\"", __PRETTY_FUNCTION__);
+        MeekanSDK *sdk = [MeekanSDK sharedInstanceWithApiKey:@"AnyKey"];
+//    NewTestClass *cl = [[NewTestClass alloc]init];
+//    MeetingDetails *details = [[MeetingDetails alloc]init];
+//    details.accountId = @"4785074604081152";
+//    details.title = @"Test";
+//    details.durationInMinutes = 10;
+//    
+    
+}
+
+
+- (void) startAsyncTest
+{
+    hasEntered = NO;
+}
+
+- (void) endAsyncTest
+{
+    hasEntered = YES;
+}
+
+- (void)maximumDelayForAsyncTest:(NSInteger)maxDelay
+{
+    NSDate *loopUntil = [NSDate dateWithTimeIntervalSinceNow:maxDelay];
+    while (hasEntered == NO && [loopUntil timeIntervalSinceNow] > 0) {
+        [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode
+                                 beforeDate:loopUntil];
+    }
+    
+    if (hasEntered != YES) {
+        XCTFail(@"Return of async call never reached");
+    }
 }
 
 @end

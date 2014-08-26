@@ -1,889 +1,475 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-<plist version="1.0">
-<dict>
-	<key>archiveVersion</key>
-	<string>1</string>
-	<key>classes</key>
-	<dict/>
-	<key>objectVersion</key>
-	<string>46</string>
-	<key>objects</key>
-	<dict>
-		<key>2AF43A1CEA5240518519551D</key>
-		<dict>
-			<key>buildActionMask</key>
-			<string>2147483647</string>
-			<key>files</key>
-			<array/>
-			<key>inputPaths</key>
-			<array/>
-			<key>isa</key>
-			<string>PBXShellScriptBuildPhase</string>
-			<key>name</key>
-			<string>Check Pods Manifest.lock</string>
-			<key>outputPaths</key>
-			<array/>
-			<key>runOnlyForDeploymentPostprocessing</key>
-			<string>0</string>
-			<key>shellPath</key>
-			<string>/bin/sh</string>
-			<key>shellScript</key>
-			<string>diff "${PODS_ROOT}/../Podfile.lock" "${PODS_ROOT}/Manifest.lock" &gt; /dev/null
-if [[ $? != 0 ]] ; then
-    cat &lt;&lt; EOM
-error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.
-EOM
-    exit 1
-fi
-</string>
-			<key>showEnvVarsInLog</key>
-			<string>0</string>
-		</dict>
-		<key>2FD3154E5E2B44E49188D387</key>
-		<dict>
-			<key>includeInIndex</key>
-			<string>1</string>
-			<key>isa</key>
-			<string>PBXFileReference</string>
-			<key>lastKnownFileType</key>
-			<string>text.xcconfig</string>
-			<key>name</key>
-			<string>Pods-MeekanSDK.xcconfig</string>
-			<key>path</key>
-			<string>Pods/Pods-MeekanSDK.xcconfig</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
-		</dict>
-		<key>48BDCDF518694913897EA13F</key>
-		<dict>
-			<key>explicitFileType</key>
-			<string>archive.ar</string>
-			<key>includeInIndex</key>
-			<string>0</string>
-			<key>isa</key>
-			<string>PBXFileReference</string>
-			<key>path</key>
-			<string>libPods-MeekanSDK.a</string>
-			<key>sourceTree</key>
-			<string>BUILT_PRODUCTS_DIR</string>
-		</dict>
-		<key>73E60417EABC471BB87B43D1</key>
-		<dict>
-			<key>fileRef</key>
-			<string>48BDCDF518694913897EA13F</string>
-			<key>isa</key>
-			<string>PBXBuildFile</string>
-		</dict>
-		<key>C160FAD9500748399B3E7517</key>
-		<dict>
-			<key>buildActionMask</key>
-			<string>2147483647</string>
-			<key>files</key>
-			<array/>
-			<key>inputPaths</key>
-			<array/>
-			<key>isa</key>
-			<string>PBXShellScriptBuildPhase</string>
-			<key>name</key>
-			<string>Copy Pods Resources</string>
-			<key>outputPaths</key>
-			<array/>
-			<key>runOnlyForDeploymentPostprocessing</key>
-			<string>0</string>
-			<key>shellPath</key>
-			<string>/bin/sh</string>
-			<key>shellScript</key>
-			<string>"${SRCROOT}/Pods/Pods-MeekanSDK-resources.sh"
-</string>
-			<key>showEnvVarsInLog</key>
-			<string>0</string>
-		</dict>
-		<key>D7F23B5919AC6A9600F3EE7B</key>
-		<dict>
-			<key>children</key>
-			<array>
-				<string>D7F23B6719AC6A9600F3EE7B</string>
-				<string>D7F23B7B19AC6A9600F3EE7B</string>
-				<string>D7F23B6419AC6A9600F3EE7B</string>
-				<string>D7F23B6319AC6A9600F3EE7B</string>
-				<string>2FD3154E5E2B44E49188D387</string>
-			</array>
-			<key>isa</key>
-			<string>PBXGroup</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
-		</dict>
-		<key>D7F23B5A19AC6A9600F3EE7B</key>
-		<dict>
-			<key>attributes</key>
-			<dict>
-				<key>LastUpgradeCheck</key>
-				<string>0510</string>
-				<key>ORGANIZATIONNAME</key>
-				<string>Meekan</string>
-			</dict>
-			<key>buildConfigurationList</key>
-			<string>D7F23B5D19AC6A9600F3EE7B</string>
-			<key>compatibilityVersion</key>
-			<string>Xcode 3.2</string>
-			<key>developmentRegion</key>
-			<string>English</string>
-			<key>hasScannedForEncodings</key>
-			<string>0</string>
-			<key>isa</key>
-			<string>PBXProject</string>
-			<key>knownRegions</key>
-			<array>
-				<string>en</string>
-			</array>
-			<key>mainGroup</key>
-			<string>D7F23B5919AC6A9600F3EE7B</string>
-			<key>productRefGroup</key>
-			<string>D7F23B6319AC6A9600F3EE7B</string>
-			<key>projectDirPath</key>
-			<string></string>
-			<key>projectReferences</key>
-			<array/>
-			<key>projectRoot</key>
-			<string></string>
-			<key>targets</key>
-			<array>
-				<string>D7F23B6119AC6A9600F3EE7B</string>
-				<string>D7F23B7119AC6A9600F3EE7B</string>
-			</array>
-		</dict>
-		<key>D7F23B5D19AC6A9600F3EE7B</key>
-		<dict>
-			<key>buildConfigurations</key>
-			<array>
-				<string>D7F23B8319AC6A9600F3EE7B</string>
-				<string>D7F23B8419AC6A9600F3EE7B</string>
-			</array>
-			<key>defaultConfigurationIsVisible</key>
-			<string>0</string>
-			<key>defaultConfigurationName</key>
-			<string>Release</string>
-			<key>isa</key>
-			<string>XCConfigurationList</string>
-		</dict>
-		<key>D7F23B5E19AC6A9600F3EE7B</key>
-		<dict>
-			<key>buildActionMask</key>
-			<string>2147483647</string>
-			<key>files</key>
-			<array>
-				<string>D7F23B6D19AC6A9600F3EE7B</string>
-			</array>
-			<key>isa</key>
-			<string>PBXSourcesBuildPhase</string>
-			<key>runOnlyForDeploymentPostprocessing</key>
-			<string>0</string>
-		</dict>
-		<key>D7F23B5F19AC6A9600F3EE7B</key>
-		<dict>
-			<key>buildActionMask</key>
-			<string>2147483647</string>
-			<key>files</key>
-			<array>
-				<string>D7F23B6619AC6A9600F3EE7B</string>
-				<string>73E60417EABC471BB87B43D1</string>
-			</array>
-			<key>isa</key>
-			<string>PBXFrameworksBuildPhase</string>
-			<key>runOnlyForDeploymentPostprocessing</key>
-			<string>0</string>
-		</dict>
-		<key>D7F23B6019AC6A9600F3EE7B</key>
-		<dict>
-			<key>buildActionMask</key>
-			<string>2147483647</string>
-			<key>dstPath</key>
-			<string>include/$(PRODUCT_NAME)</string>
-			<key>dstSubfolderSpec</key>
-			<string>16</string>
-			<key>files</key>
-			<array>
-				<string>D7F23B6B19AC6A9600F3EE7B</string>
-			</array>
-			<key>isa</key>
-			<string>PBXCopyFilesBuildPhase</string>
-			<key>runOnlyForDeploymentPostprocessing</key>
-			<string>0</string>
-		</dict>
-		<key>D7F23B6119AC6A9600F3EE7B</key>
-		<dict>
-			<key>buildConfigurationList</key>
-			<string>D7F23B8519AC6A9600F3EE7B</string>
-			<key>buildPhases</key>
-			<array>
-				<string>2AF43A1CEA5240518519551D</string>
-				<string>D7F23B5E19AC6A9600F3EE7B</string>
-				<string>D7F23B5F19AC6A9600F3EE7B</string>
-				<string>D7F23B6019AC6A9600F3EE7B</string>
-				<string>C160FAD9500748399B3E7517</string>
-			</array>
-			<key>buildRules</key>
-			<array/>
-			<key>dependencies</key>
-			<array/>
-			<key>isa</key>
-			<string>PBXNativeTarget</string>
-			<key>name</key>
-			<string>MeekanSDK</string>
-			<key>productName</key>
-			<string>MeekanSDK</string>
-			<key>productReference</key>
-			<string>D7F23B6219AC6A9600F3EE7B</string>
-			<key>productType</key>
-			<string>com.apple.product-type.library.static</string>
-		</dict>
-		<key>D7F23B6219AC6A9600F3EE7B</key>
-		<dict>
-			<key>explicitFileType</key>
-			<string>archive.ar</string>
-			<key>includeInIndex</key>
-			<string>0</string>
-			<key>isa</key>
-			<string>PBXFileReference</string>
-			<key>path</key>
-			<string>libMeekanSDK.a</string>
-			<key>sourceTree</key>
-			<string>BUILT_PRODUCTS_DIR</string>
-		</dict>
-		<key>D7F23B6319AC6A9600F3EE7B</key>
-		<dict>
-			<key>children</key>
-			<array>
-				<string>D7F23B6219AC6A9600F3EE7B</string>
-				<string>D7F23B7219AC6A9600F3EE7B</string>
-			</array>
-			<key>isa</key>
-			<string>PBXGroup</string>
-			<key>name</key>
-			<string>Products</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
-		</dict>
-		<key>D7F23B6419AC6A9600F3EE7B</key>
-		<dict>
-			<key>children</key>
-			<array>
-				<string>D7F23B6519AC6A9600F3EE7B</string>
-				<string>D7F23B7319AC6A9600F3EE7B</string>
-				<string>D7F23B7619AC6A9600F3EE7B</string>
-				<string>48BDCDF518694913897EA13F</string>
-			</array>
-			<key>isa</key>
-			<string>PBXGroup</string>
-			<key>name</key>
-			<string>Frameworks</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
-		</dict>
-		<key>D7F23B6519AC6A9600F3EE7B</key>
-		<dict>
-			<key>isa</key>
-			<string>PBXFileReference</string>
-			<key>lastKnownFileType</key>
-			<string>wrapper.framework</string>
-			<key>name</key>
-			<string>Foundation.framework</string>
-			<key>path</key>
-			<string>System/Library/Frameworks/Foundation.framework</string>
-			<key>sourceTree</key>
-			<string>SDKROOT</string>
-		</dict>
-		<key>D7F23B6619AC6A9600F3EE7B</key>
-		<dict>
-			<key>fileRef</key>
-			<string>D7F23B6519AC6A9600F3EE7B</string>
-			<key>isa</key>
-			<string>PBXBuildFile</string>
-		</dict>
-		<key>D7F23B6719AC6A9600F3EE7B</key>
-		<dict>
-			<key>children</key>
-			<array>
-				<string>D7F23B6A19AC6A9600F3EE7B</string>
-				<string>D7F23B6C19AC6A9600F3EE7B</string>
-				<string>D7F23B6819AC6A9600F3EE7B</string>
-			</array>
-			<key>isa</key>
-			<string>PBXGroup</string>
-			<key>path</key>
-			<string>MeekanSDK</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
-		</dict>
-		<key>D7F23B6819AC6A9600F3EE7B</key>
-		<dict>
-			<key>children</key>
-			<array>
-				<string>D7F23B6919AC6A9600F3EE7B</string>
-			</array>
-			<key>isa</key>
-			<string>PBXGroup</string>
-			<key>name</key>
-			<string>Supporting Files</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
-		</dict>
-		<key>D7F23B6919AC6A9600F3EE7B</key>
-		<dict>
-			<key>isa</key>
-			<string>PBXFileReference</string>
-			<key>lastKnownFileType</key>
-			<string>sourcecode.c.h</string>
-			<key>path</key>
-			<string>MeekanSDK-Prefix.pch</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
-		</dict>
-		<key>D7F23B6A19AC6A9600F3EE7B</key>
-		<dict>
-			<key>isa</key>
-			<string>PBXFileReference</string>
-			<key>lastKnownFileType</key>
-			<string>sourcecode.c.h</string>
-			<key>path</key>
-			<string>MeekanSDK.h</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
-		</dict>
-		<key>D7F23B6B19AC6A9600F3EE7B</key>
-		<dict>
-			<key>fileRef</key>
-			<string>D7F23B6A19AC6A9600F3EE7B</string>
-			<key>isa</key>
-			<string>PBXBuildFile</string>
-		</dict>
-		<key>D7F23B6C19AC6A9600F3EE7B</key>
-		<dict>
-			<key>isa</key>
-			<string>PBXFileReference</string>
-			<key>lastKnownFileType</key>
-			<string>sourcecode.c.objc</string>
-			<key>path</key>
-			<string>MeekanSDK.m</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
-		</dict>
-		<key>D7F23B6D19AC6A9600F3EE7B</key>
-		<dict>
-			<key>fileRef</key>
-			<string>D7F23B6C19AC6A9600F3EE7B</string>
-			<key>isa</key>
-			<string>PBXBuildFile</string>
-		</dict>
-		<key>D7F23B6E19AC6A9600F3EE7B</key>
-		<dict>
-			<key>buildActionMask</key>
-			<string>2147483647</string>
-			<key>files</key>
-			<array>
-				<string>D7F23B8219AC6A9600F3EE7B</string>
-			</array>
-			<key>isa</key>
-			<string>PBXSourcesBuildPhase</string>
-			<key>runOnlyForDeploymentPostprocessing</key>
-			<string>0</string>
-		</dict>
-		<key>D7F23B6F19AC6A9600F3EE7B</key>
-		<dict>
-			<key>buildActionMask</key>
-			<string>2147483647</string>
-			<key>files</key>
-			<array>
-				<string>D7F23B7419AC6A9600F3EE7B</string>
-				<string>D7F23B7719AC6A9600F3EE7B</string>
-				<string>D7F23B7519AC6A9600F3EE7B</string>
-				<string>D7F23B7A19AC6A9600F3EE7B</string>
-			</array>
-			<key>isa</key>
-			<string>PBXFrameworksBuildPhase</string>
-			<key>runOnlyForDeploymentPostprocessing</key>
-			<string>0</string>
-		</dict>
-		<key>D7F23B7019AC6A9600F3EE7B</key>
-		<dict>
-			<key>buildActionMask</key>
-			<string>2147483647</string>
-			<key>files</key>
-			<array>
-				<string>D7F23B8019AC6A9600F3EE7B</string>
-			</array>
-			<key>isa</key>
-			<string>PBXResourcesBuildPhase</string>
-			<key>runOnlyForDeploymentPostprocessing</key>
-			<string>0</string>
-		</dict>
-		<key>D7F23B7119AC6A9600F3EE7B</key>
-		<dict>
-			<key>buildConfigurationList</key>
-			<string>D7F23B8819AC6A9600F3EE7B</string>
-			<key>buildPhases</key>
-			<array>
-				<string>D7F23B6E19AC6A9600F3EE7B</string>
-				<string>D7F23B6F19AC6A9600F3EE7B</string>
-				<string>D7F23B7019AC6A9600F3EE7B</string>
-			</array>
-			<key>buildRules</key>
-			<array/>
-			<key>dependencies</key>
-			<array>
-				<string>D7F23B7919AC6A9600F3EE7B</string>
-			</array>
-			<key>isa</key>
-			<string>PBXNativeTarget</string>
-			<key>name</key>
-			<string>MeekanSDKTests</string>
-			<key>productName</key>
-			<string>MeekanSDKTests</string>
-			<key>productReference</key>
-			<string>D7F23B7219AC6A9600F3EE7B</string>
-			<key>productType</key>
-			<string>com.apple.product-type.bundle.unit-test</string>
-		</dict>
-		<key>D7F23B7219AC6A9600F3EE7B</key>
-		<dict>
-			<key>explicitFileType</key>
-			<string>wrapper.cfbundle</string>
-			<key>includeInIndex</key>
-			<string>0</string>
-			<key>isa</key>
-			<string>PBXFileReference</string>
-			<key>path</key>
-			<string>MeekanSDKTests.xctest</string>
-			<key>sourceTree</key>
-			<string>BUILT_PRODUCTS_DIR</string>
-		</dict>
-		<key>D7F23B7319AC6A9600F3EE7B</key>
-		<dict>
-			<key>isa</key>
-			<string>PBXFileReference</string>
-			<key>lastKnownFileType</key>
-			<string>wrapper.framework</string>
-			<key>name</key>
-			<string>XCTest.framework</string>
-			<key>path</key>
-			<string>Library/Frameworks/XCTest.framework</string>
-			<key>sourceTree</key>
-			<string>DEVELOPER_DIR</string>
-		</dict>
-		<key>D7F23B7419AC6A9600F3EE7B</key>
-		<dict>
-			<key>fileRef</key>
-			<string>D7F23B7319AC6A9600F3EE7B</string>
-			<key>isa</key>
-			<string>PBXBuildFile</string>
-		</dict>
-		<key>D7F23B7519AC6A9600F3EE7B</key>
-		<dict>
-			<key>fileRef</key>
-			<string>D7F23B6519AC6A9600F3EE7B</string>
-			<key>isa</key>
-			<string>PBXBuildFile</string>
-		</dict>
-		<key>D7F23B7619AC6A9600F3EE7B</key>
-		<dict>
-			<key>isa</key>
-			<string>PBXFileReference</string>
-			<key>lastKnownFileType</key>
-			<string>wrapper.framework</string>
-			<key>name</key>
-			<string>UIKit.framework</string>
-			<key>path</key>
-			<string>Library/Frameworks/UIKit.framework</string>
-			<key>sourceTree</key>
-			<string>DEVELOPER_DIR</string>
-		</dict>
-		<key>D7F23B7719AC6A9600F3EE7B</key>
-		<dict>
-			<key>fileRef</key>
-			<string>D7F23B7619AC6A9600F3EE7B</string>
-			<key>isa</key>
-			<string>PBXBuildFile</string>
-		</dict>
-		<key>D7F23B7819AC6A9600F3EE7B</key>
-		<dict>
-			<key>containerPortal</key>
-			<string>D7F23B5A19AC6A9600F3EE7B</string>
-			<key>isa</key>
-			<string>PBXContainerItemProxy</string>
-			<key>proxyType</key>
-			<string>1</string>
-			<key>remoteGlobalIDString</key>
-			<string>D7F23B6119AC6A9600F3EE7B</string>
-			<key>remoteInfo</key>
-			<string>MeekanSDK</string>
-		</dict>
-		<key>D7F23B7919AC6A9600F3EE7B</key>
-		<dict>
-			<key>isa</key>
-			<string>PBXTargetDependency</string>
-			<key>target</key>
-			<string>D7F23B6119AC6A9600F3EE7B</string>
-			<key>targetProxy</key>
-			<string>D7F23B7819AC6A9600F3EE7B</string>
-		</dict>
-		<key>D7F23B7A19AC6A9600F3EE7B</key>
-		<dict>
-			<key>fileRef</key>
-			<string>D7F23B6219AC6A9600F3EE7B</string>
-			<key>isa</key>
-			<string>PBXBuildFile</string>
-		</dict>
-		<key>D7F23B7B19AC6A9600F3EE7B</key>
-		<dict>
-			<key>children</key>
-			<array>
-				<string>D7F23B8119AC6A9600F3EE7B</string>
-				<string>D7F23B7C19AC6A9600F3EE7B</string>
-			</array>
-			<key>isa</key>
-			<string>PBXGroup</string>
-			<key>path</key>
-			<string>MeekanSDKTests</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
-		</dict>
-		<key>D7F23B7C19AC6A9600F3EE7B</key>
-		<dict>
-			<key>children</key>
-			<array>
-				<string>D7F23B7D19AC6A9600F3EE7B</string>
-				<string>D7F23B7E19AC6A9600F3EE7B</string>
-			</array>
-			<key>isa</key>
-			<string>PBXGroup</string>
-			<key>name</key>
-			<string>Supporting Files</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
-		</dict>
-		<key>D7F23B7D19AC6A9600F3EE7B</key>
-		<dict>
-			<key>isa</key>
-			<string>PBXFileReference</string>
-			<key>lastKnownFileType</key>
-			<string>text.plist.xml</string>
-			<key>path</key>
-			<string>MeekanSDKTests-Info.plist</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
-		</dict>
-		<key>D7F23B7E19AC6A9600F3EE7B</key>
-		<dict>
-			<key>children</key>
-			<array>
-				<string>D7F23B7F19AC6A9600F3EE7B</string>
-			</array>
-			<key>isa</key>
-			<string>PBXVariantGroup</string>
-			<key>name</key>
-			<string>InfoPlist.strings</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
-		</dict>
-		<key>D7F23B7F19AC6A9600F3EE7B</key>
-		<dict>
-			<key>isa</key>
-			<string>PBXFileReference</string>
-			<key>lastKnownFileType</key>
-			<string>text.plist.strings</string>
-			<key>name</key>
-			<string>en</string>
-			<key>path</key>
-			<string>en.lproj/InfoPlist.strings</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
-		</dict>
-		<key>D7F23B8019AC6A9600F3EE7B</key>
-		<dict>
-			<key>fileRef</key>
-			<string>D7F23B7E19AC6A9600F3EE7B</string>
-			<key>isa</key>
-			<string>PBXBuildFile</string>
-		</dict>
-		<key>D7F23B8119AC6A9600F3EE7B</key>
-		<dict>
-			<key>isa</key>
-			<string>PBXFileReference</string>
-			<key>lastKnownFileType</key>
-			<string>sourcecode.c.objc</string>
-			<key>path</key>
-			<string>MeekanSDKTests.m</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
-		</dict>
-		<key>D7F23B8219AC6A9600F3EE7B</key>
-		<dict>
-			<key>fileRef</key>
-			<string>D7F23B8119AC6A9600F3EE7B</string>
-			<key>isa</key>
-			<string>PBXBuildFile</string>
-		</dict>
-		<key>D7F23B8319AC6A9600F3EE7B</key>
-		<dict>
-			<key>buildSettings</key>
-			<dict>
-				<key>ALWAYS_SEARCH_USER_PATHS</key>
-				<string>NO</string>
-				<key>CLANG_CXX_LANGUAGE_STANDARD</key>
-				<string>gnu++0x</string>
-				<key>CLANG_CXX_LIBRARY</key>
-				<string>libc++</string>
-				<key>CLANG_ENABLE_MODULES</key>
-				<string>YES</string>
-				<key>CLANG_ENABLE_OBJC_ARC</key>
-				<string>YES</string>
-				<key>CLANG_WARN_BOOL_CONVERSION</key>
-				<string>YES</string>
-				<key>CLANG_WARN_CONSTANT_CONVERSION</key>
-				<string>YES</string>
-				<key>CLANG_WARN_DIRECT_OBJC_ISA_USAGE</key>
-				<string>YES_ERROR</string>
-				<key>CLANG_WARN_EMPTY_BODY</key>
-				<string>YES</string>
-				<key>CLANG_WARN_ENUM_CONVERSION</key>
-				<string>YES</string>
-				<key>CLANG_WARN_INT_CONVERSION</key>
-				<string>YES</string>
-				<key>CLANG_WARN_OBJC_ROOT_CLASS</key>
-				<string>YES_ERROR</string>
-				<key>CLANG_WARN__DUPLICATE_METHOD_MATCH</key>
-				<string>YES</string>
-				<key>COPY_PHASE_STRIP</key>
-				<string>NO</string>
-				<key>GCC_C_LANGUAGE_STANDARD</key>
-				<string>gnu99</string>
-				<key>GCC_DYNAMIC_NO_PIC</key>
-				<string>NO</string>
-				<key>GCC_OPTIMIZATION_LEVEL</key>
-				<string>0</string>
-				<key>GCC_PREPROCESSOR_DEFINITIONS</key>
-				<array>
-					<string>DEBUG=1</string>
-					<string>$(inherited)</string>
-				</array>
-				<key>GCC_SYMBOLS_PRIVATE_EXTERN</key>
-				<string>NO</string>
-				<key>GCC_WARN_64_TO_32_BIT_CONVERSION</key>
-				<string>YES</string>
-				<key>GCC_WARN_ABOUT_RETURN_TYPE</key>
-				<string>YES_ERROR</string>
-				<key>GCC_WARN_UNDECLARED_SELECTOR</key>
-				<string>YES</string>
-				<key>GCC_WARN_UNINITIALIZED_AUTOS</key>
-				<string>YES_AGGRESSIVE</string>
-				<key>GCC_WARN_UNUSED_FUNCTION</key>
-				<string>YES</string>
-				<key>GCC_WARN_UNUSED_VARIABLE</key>
-				<string>YES</string>
-				<key>IPHONEOS_DEPLOYMENT_TARGET</key>
-				<string>7.1</string>
-				<key>ONLY_ACTIVE_ARCH</key>
-				<string>YES</string>
-				<key>SDKROOT</key>
-				<string>iphoneos</string>
-			</dict>
-			<key>isa</key>
-			<string>XCBuildConfiguration</string>
-			<key>name</key>
-			<string>Debug</string>
-		</dict>
-		<key>D7F23B8419AC6A9600F3EE7B</key>
-		<dict>
-			<key>buildSettings</key>
-			<dict>
-				<key>ALWAYS_SEARCH_USER_PATHS</key>
-				<string>NO</string>
-				<key>CLANG_CXX_LANGUAGE_STANDARD</key>
-				<string>gnu++0x</string>
-				<key>CLANG_CXX_LIBRARY</key>
-				<string>libc++</string>
-				<key>CLANG_ENABLE_MODULES</key>
-				<string>YES</string>
-				<key>CLANG_ENABLE_OBJC_ARC</key>
-				<string>YES</string>
-				<key>CLANG_WARN_BOOL_CONVERSION</key>
-				<string>YES</string>
-				<key>CLANG_WARN_CONSTANT_CONVERSION</key>
-				<string>YES</string>
-				<key>CLANG_WARN_DIRECT_OBJC_ISA_USAGE</key>
-				<string>YES_ERROR</string>
-				<key>CLANG_WARN_EMPTY_BODY</key>
-				<string>YES</string>
-				<key>CLANG_WARN_ENUM_CONVERSION</key>
-				<string>YES</string>
-				<key>CLANG_WARN_INT_CONVERSION</key>
-				<string>YES</string>
-				<key>CLANG_WARN_OBJC_ROOT_CLASS</key>
-				<string>YES_ERROR</string>
-				<key>CLANG_WARN__DUPLICATE_METHOD_MATCH</key>
-				<string>YES</string>
-				<key>COPY_PHASE_STRIP</key>
-				<string>YES</string>
-				<key>ENABLE_NS_ASSERTIONS</key>
-				<string>NO</string>
-				<key>GCC_C_LANGUAGE_STANDARD</key>
-				<string>gnu99</string>
-				<key>GCC_WARN_64_TO_32_BIT_CONVERSION</key>
-				<string>YES</string>
-				<key>GCC_WARN_ABOUT_RETURN_TYPE</key>
-				<string>YES_ERROR</string>
-				<key>GCC_WARN_UNDECLARED_SELECTOR</key>
-				<string>YES</string>
-				<key>GCC_WARN_UNINITIALIZED_AUTOS</key>
-				<string>YES_AGGRESSIVE</string>
-				<key>GCC_WARN_UNUSED_FUNCTION</key>
-				<string>YES</string>
-				<key>GCC_WARN_UNUSED_VARIABLE</key>
-				<string>YES</string>
-				<key>IPHONEOS_DEPLOYMENT_TARGET</key>
-				<string>7.1</string>
-				<key>SDKROOT</key>
-				<string>iphoneos</string>
-				<key>VALIDATE_PRODUCT</key>
-				<string>YES</string>
-			</dict>
-			<key>isa</key>
-			<string>XCBuildConfiguration</string>
-			<key>name</key>
-			<string>Release</string>
-		</dict>
-		<key>D7F23B8519AC6A9600F3EE7B</key>
-		<dict>
-			<key>buildConfigurations</key>
-			<array>
-				<string>D7F23B8619AC6A9600F3EE7B</string>
-				<string>D7F23B8719AC6A9600F3EE7B</string>
-			</array>
-			<key>defaultConfigurationIsVisible</key>
-			<string>0</string>
-			<key>isa</key>
-			<string>XCConfigurationList</string>
-		</dict>
-		<key>D7F23B8619AC6A9600F3EE7B</key>
-		<dict>
-			<key>baseConfigurationReference</key>
-			<string>2FD3154E5E2B44E49188D387</string>
-			<key>buildSettings</key>
-			<dict>
-				<key>DSTROOT</key>
-				<string>/tmp/MeekanSDK.dst</string>
-				<key>GCC_PRECOMPILE_PREFIX_HEADER</key>
-				<string>YES</string>
-				<key>GCC_PREFIX_HEADER</key>
-				<string>MeekanSDK/MeekanSDK-Prefix.pch</string>
-				<key>OTHER_LDFLAGS</key>
-				<string>-ObjC</string>
-				<key>PRODUCT_NAME</key>
-				<string>$(TARGET_NAME)</string>
-				<key>SKIP_INSTALL</key>
-				<string>YES</string>
-			</dict>
-			<key>isa</key>
-			<string>XCBuildConfiguration</string>
-			<key>name</key>
-			<string>Debug</string>
-		</dict>
-		<key>D7F23B8719AC6A9600F3EE7B</key>
-		<dict>
-			<key>baseConfigurationReference</key>
-			<string>2FD3154E5E2B44E49188D387</string>
-			<key>buildSettings</key>
-			<dict>
-				<key>DSTROOT</key>
-				<string>/tmp/MeekanSDK.dst</string>
-				<key>GCC_PRECOMPILE_PREFIX_HEADER</key>
-				<string>YES</string>
-				<key>GCC_PREFIX_HEADER</key>
-				<string>MeekanSDK/MeekanSDK-Prefix.pch</string>
-				<key>OTHER_LDFLAGS</key>
-				<string>-ObjC</string>
-				<key>PRODUCT_NAME</key>
-				<string>$(TARGET_NAME)</string>
-				<key>SKIP_INSTALL</key>
-				<string>YES</string>
-			</dict>
-			<key>isa</key>
-			<string>XCBuildConfiguration</string>
-			<key>name</key>
-			<string>Release</string>
-		</dict>
-		<key>D7F23B8819AC6A9600F3EE7B</key>
-		<dict>
-			<key>buildConfigurations</key>
-			<array>
-				<string>D7F23B8919AC6A9600F3EE7B</string>
-				<string>D7F23B8A19AC6A9600F3EE7B</string>
-			</array>
-			<key>defaultConfigurationIsVisible</key>
-			<string>0</string>
-			<key>isa</key>
-			<string>XCConfigurationList</string>
-		</dict>
-		<key>D7F23B8919AC6A9600F3EE7B</key>
-		<dict>
-			<key>buildSettings</key>
-			<dict>
-				<key>FRAMEWORK_SEARCH_PATHS</key>
-				<array>
-					<string>$(SDKROOT)/Developer/Library/Frameworks</string>
-					<string>$(inherited)</string>
-					<string>$(DEVELOPER_FRAMEWORKS_DIR)</string>
-				</array>
-				<key>GCC_PRECOMPILE_PREFIX_HEADER</key>
-				<string>YES</string>
-				<key>GCC_PREFIX_HEADER</key>
-				<string>MeekanSDK/MeekanSDK-Prefix.pch</string>
-				<key>GCC_PREPROCESSOR_DEFINITIONS</key>
-				<array>
-					<string>DEBUG=1</string>
-					<string>$(inherited)</string>
-				</array>
-				<key>INFOPLIST_FILE</key>
-				<string>MeekanSDKTests/MeekanSDKTests-Info.plist</string>
-				<key>PRODUCT_NAME</key>
-				<string>$(TARGET_NAME)</string>
-				<key>WRAPPER_EXTENSION</key>
-				<string>xctest</string>
-			</dict>
-			<key>isa</key>
-			<string>XCBuildConfiguration</string>
-			<key>name</key>
-			<string>Debug</string>
-		</dict>
-		<key>D7F23B8A19AC6A9600F3EE7B</key>
-		<dict>
-			<key>buildSettings</key>
-			<dict>
-				<key>FRAMEWORK_SEARCH_PATHS</key>
-				<array>
-					<string>$(SDKROOT)/Developer/Library/Frameworks</string>
-					<string>$(inherited)</string>
-					<string>$(DEVELOPER_FRAMEWORKS_DIR)</string>
-				</array>
-				<key>GCC_PRECOMPILE_PREFIX_HEADER</key>
-				<string>YES</string>
-				<key>GCC_PREFIX_HEADER</key>
-				<string>MeekanSDK/MeekanSDK-Prefix.pch</string>
-				<key>INFOPLIST_FILE</key>
-				<string>MeekanSDKTests/MeekanSDKTests-Info.plist</string>
-				<key>PRODUCT_NAME</key>
-				<string>$(TARGET_NAME)</string>
-				<key>WRAPPER_EXTENSION</key>
-				<string>xctest</string>
-			</dict>
-			<key>isa</key>
-			<string>XCBuildConfiguration</string>
-			<key>name</key>
-			<string>Release</string>
-		</dict>
-	</dict>
-	<key>rootObject</key>
-	<string>D7F23B5A19AC6A9600F3EE7B</string>
-</dict>
-</plist>
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		73E60417EABC471BB87B43D1 /* libPods-MeekanSDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 48BDCDF518694913897EA13F /* libPods-MeekanSDK.a */; };
+		D7B2814919AC6CD100AA4E95 /* MeekanSDK.m in Sources */ = {isa = PBXBuildFile; fileRef = D7B2814419AC6CD100AA4E95 /* MeekanSDK.m */; };
+		D7B2814A19AC6CD100AA4E95 /* MKNApiAdapter.m in Sources */ = {isa = PBXBuildFile; fileRef = D7B2814619AC6CD100AA4E95 /* MKNApiAdapter.m */; };
+		D7B2814B19AC6CD100AA4E95 /* MKNParameters.m in Sources */ = {isa = PBXBuildFile; fileRef = D7B2814819AC6CD100AA4E95 /* MKNParameters.m */; };
+		D7F23B6619AC6A9600F3EE7B /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D7F23B6519AC6A9600F3EE7B /* Foundation.framework */; };
+		D7F23B7419AC6A9600F3EE7B /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D7F23B7319AC6A9600F3EE7B /* XCTest.framework */; };
+		D7F23B7519AC6A9600F3EE7B /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D7F23B6519AC6A9600F3EE7B /* Foundation.framework */; };
+		D7F23B7719AC6A9600F3EE7B /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D7F23B7619AC6A9600F3EE7B /* UIKit.framework */; };
+		D7F23B7A19AC6A9600F3EE7B /* libMeekanSDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D7F23B6219AC6A9600F3EE7B /* libMeekanSDK.a */; };
+		D7F23B8019AC6A9600F3EE7B /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = D7F23B7E19AC6A9600F3EE7B /* InfoPlist.strings */; };
+		D7F23B8219AC6A9600F3EE7B /* MeekanSDKTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D7F23B8119AC6A9600F3EE7B /* MeekanSDKTests.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		D7F23B7819AC6A9600F3EE7B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D7F23B5A19AC6A9600F3EE7B /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D7F23B6119AC6A9600F3EE7B;
+			remoteInfo = MeekanSDK;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		D7F23B6019AC6A9600F3EE7B /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "include/$(PRODUCT_NAME)";
+			dstSubfolderSpec = 16;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		2FD3154E5E2B44E49188D387 /* Pods-MeekanSDK.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MeekanSDK.xcconfig"; path = "Pods/Pods-MeekanSDK.xcconfig"; sourceTree = "<group>"; };
+		48BDCDF518694913897EA13F /* libPods-MeekanSDK.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-MeekanSDK.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		D7B2814319AC6CD100AA4E95 /* MeekanSDK.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MeekanSDK.h; sourceTree = "<group>"; };
+		D7B2814419AC6CD100AA4E95 /* MeekanSDK.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MeekanSDK.m; sourceTree = "<group>"; };
+		D7B2814519AC6CD100AA4E95 /* MKNApiAdapter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MKNApiAdapter.h; sourceTree = "<group>"; };
+		D7B2814619AC6CD100AA4E95 /* MKNApiAdapter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MKNApiAdapter.m; sourceTree = "<group>"; };
+		D7B2814719AC6CD100AA4E95 /* MKNParameters.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MKNParameters.h; sourceTree = "<group>"; };
+		D7B2814819AC6CD100AA4E95 /* MKNParameters.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MKNParameters.m; sourceTree = "<group>"; };
+		D7F23B6219AC6A9600F3EE7B /* libMeekanSDK.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libMeekanSDK.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		D7F23B6519AC6A9600F3EE7B /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		D7F23B6919AC6A9600F3EE7B /* MeekanSDK-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "MeekanSDK-Prefix.pch"; sourceTree = "<group>"; };
+		D7F23B7219AC6A9600F3EE7B /* MeekanSDKTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MeekanSDKTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		D7F23B7319AC6A9600F3EE7B /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
+		D7F23B7619AC6A9600F3EE7B /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = Library/Frameworks/UIKit.framework; sourceTree = DEVELOPER_DIR; };
+		D7F23B7D19AC6A9600F3EE7B /* MeekanSDKTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "MeekanSDKTests-Info.plist"; sourceTree = "<group>"; };
+		D7F23B7F19AC6A9600F3EE7B /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		D7F23B8119AC6A9600F3EE7B /* MeekanSDKTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MeekanSDKTests.m; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		D7F23B5F19AC6A9600F3EE7B /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D7F23B6619AC6A9600F3EE7B /* Foundation.framework in Frameworks */,
+				73E60417EABC471BB87B43D1 /* libPods-MeekanSDK.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D7F23B6F19AC6A9600F3EE7B /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D7F23B7419AC6A9600F3EE7B /* XCTest.framework in Frameworks */,
+				D7F23B7719AC6A9600F3EE7B /* UIKit.framework in Frameworks */,
+				D7F23B7519AC6A9600F3EE7B /* Foundation.framework in Frameworks */,
+				D7F23B7A19AC6A9600F3EE7B /* libMeekanSDK.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		D7F23B5919AC6A9600F3EE7B = {
+			isa = PBXGroup;
+			children = (
+				D7F23B6719AC6A9600F3EE7B /* MeekanSDK */,
+				D7F23B7B19AC6A9600F3EE7B /* MeekanSDKTests */,
+				D7F23B6419AC6A9600F3EE7B /* Frameworks */,
+				D7F23B6319AC6A9600F3EE7B /* Products */,
+				2FD3154E5E2B44E49188D387 /* Pods-MeekanSDK.xcconfig */,
+			);
+			sourceTree = "<group>";
+		};
+		D7F23B6319AC6A9600F3EE7B /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				D7F23B6219AC6A9600F3EE7B /* libMeekanSDK.a */,
+				D7F23B7219AC6A9600F3EE7B /* MeekanSDKTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		D7F23B6419AC6A9600F3EE7B /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				D7F23B6519AC6A9600F3EE7B /* Foundation.framework */,
+				D7F23B7319AC6A9600F3EE7B /* XCTest.framework */,
+				D7F23B7619AC6A9600F3EE7B /* UIKit.framework */,
+				48BDCDF518694913897EA13F /* libPods-MeekanSDK.a */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		D7F23B6719AC6A9600F3EE7B /* MeekanSDK */ = {
+			isa = PBXGroup;
+			children = (
+				D7B2814319AC6CD100AA4E95 /* MeekanSDK.h */,
+				D7B2814419AC6CD100AA4E95 /* MeekanSDK.m */,
+				D7B2814519AC6CD100AA4E95 /* MKNApiAdapter.h */,
+				D7B2814619AC6CD100AA4E95 /* MKNApiAdapter.m */,
+				D7B2814719AC6CD100AA4E95 /* MKNParameters.h */,
+				D7B2814819AC6CD100AA4E95 /* MKNParameters.m */,
+				D7F23B6819AC6A9600F3EE7B /* Supporting Files */,
+			);
+			path = MeekanSDK;
+			sourceTree = "<group>";
+		};
+		D7F23B6819AC6A9600F3EE7B /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				D7F23B6919AC6A9600F3EE7B /* MeekanSDK-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		D7F23B7B19AC6A9600F3EE7B /* MeekanSDKTests */ = {
+			isa = PBXGroup;
+			children = (
+				D7F23B8119AC6A9600F3EE7B /* MeekanSDKTests.m */,
+				D7F23B7C19AC6A9600F3EE7B /* Supporting Files */,
+			);
+			path = MeekanSDKTests;
+			sourceTree = "<group>";
+		};
+		D7F23B7C19AC6A9600F3EE7B /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				D7F23B7D19AC6A9600F3EE7B /* MeekanSDKTests-Info.plist */,
+				D7F23B7E19AC6A9600F3EE7B /* InfoPlist.strings */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		D7F23B6119AC6A9600F3EE7B /* MeekanSDK */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D7F23B8519AC6A9600F3EE7B /* Build configuration list for PBXNativeTarget "MeekanSDK" */;
+			buildPhases = (
+				2AF43A1CEA5240518519551D /* Check Pods Manifest.lock */,
+				D7F23B5E19AC6A9600F3EE7B /* Sources */,
+				D7F23B5F19AC6A9600F3EE7B /* Frameworks */,
+				D7F23B6019AC6A9600F3EE7B /* CopyFiles */,
+				C160FAD9500748399B3E7517 /* Copy Pods Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = MeekanSDK;
+			productName = MeekanSDK;
+			productReference = D7F23B6219AC6A9600F3EE7B /* libMeekanSDK.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		D7F23B7119AC6A9600F3EE7B /* MeekanSDKTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D7F23B8819AC6A9600F3EE7B /* Build configuration list for PBXNativeTarget "MeekanSDKTests" */;
+			buildPhases = (
+				D7F23B6E19AC6A9600F3EE7B /* Sources */,
+				D7F23B6F19AC6A9600F3EE7B /* Frameworks */,
+				D7F23B7019AC6A9600F3EE7B /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				D7F23B7919AC6A9600F3EE7B /* PBXTargetDependency */,
+			);
+			name = MeekanSDKTests;
+			productName = MeekanSDKTests;
+			productReference = D7F23B7219AC6A9600F3EE7B /* MeekanSDKTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		D7F23B5A19AC6A9600F3EE7B /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0510;
+				ORGANIZATIONNAME = Meekan;
+			};
+			buildConfigurationList = D7F23B5D19AC6A9600F3EE7B /* Build configuration list for PBXProject "MeekanSDK" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = D7F23B5919AC6A9600F3EE7B;
+			productRefGroup = D7F23B6319AC6A9600F3EE7B /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				D7F23B6119AC6A9600F3EE7B /* MeekanSDK */,
+				D7F23B7119AC6A9600F3EE7B /* MeekanSDKTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		D7F23B7019AC6A9600F3EE7B /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D7F23B8019AC6A9600F3EE7B /* InfoPlist.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		2AF43A1CEA5240518519551D /* Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		C160FAD9500748399B3E7517 /* Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Pods-MeekanSDK-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		D7F23B5E19AC6A9600F3EE7B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D7B2814919AC6CD100AA4E95 /* MeekanSDK.m in Sources */,
+				D7B2814A19AC6CD100AA4E95 /* MKNApiAdapter.m in Sources */,
+				D7B2814B19AC6CD100AA4E95 /* MKNParameters.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D7F23B6E19AC6A9600F3EE7B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D7F23B8219AC6A9600F3EE7B /* MeekanSDKTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		D7F23B7919AC6A9600F3EE7B /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D7F23B6119AC6A9600F3EE7B /* MeekanSDK */;
+			targetProxy = D7F23B7819AC6A9600F3EE7B /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		D7F23B7E19AC6A9600F3EE7B /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				D7F23B7F19AC6A9600F3EE7B /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		D7F23B8319AC6A9600F3EE7B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		D7F23B8419AC6A9600F3EE7B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = YES;
+				ENABLE_NS_ASSERTIONS = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		D7F23B8619AC6A9600F3EE7B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 2FD3154E5E2B44E49188D387 /* Pods-MeekanSDK.xcconfig */;
+			buildSettings = {
+				DSTROOT = /tmp/MeekanSDK.dst;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "MeekanSDK/MeekanSDK-Prefix.pch";
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		D7F23B8719AC6A9600F3EE7B /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 2FD3154E5E2B44E49188D387 /* Pods-MeekanSDK.xcconfig */;
+			buildSettings = {
+				DSTROOT = /tmp/MeekanSDK.dst;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "MeekanSDK/MeekanSDK-Prefix.pch";
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Release;
+		};
+		D7F23B8919AC6A9600F3EE7B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "MeekanSDK/MeekanSDK-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = "MeekanSDKTests/MeekanSDKTests-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = xctest;
+			};
+			name = Debug;
+		};
+		D7F23B8A19AC6A9600F3EE7B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "MeekanSDK/MeekanSDK-Prefix.pch";
+				INFOPLIST_FILE = "MeekanSDKTests/MeekanSDKTests-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = xctest;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		D7F23B5D19AC6A9600F3EE7B /* Build configuration list for PBXProject "MeekanSDK" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D7F23B8319AC6A9600F3EE7B /* Debug */,
+				D7F23B8419AC6A9600F3EE7B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		D7F23B8519AC6A9600F3EE7B /* Build configuration list for PBXNativeTarget "MeekanSDK" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D7F23B8619AC6A9600F3EE7B /* Debug */,
+				D7F23B8719AC6A9600F3EE7B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		D7F23B8819AC6A9600F3EE7B /* Build configuration list for PBXNativeTarget "MeekanSDKTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D7F23B8919AC6A9600F3EE7B /* Debug */,
+				D7F23B8A19AC6A9600F3EE7B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = D7F23B5A19AC6A9600F3EE7B /* Project object */;
+}
