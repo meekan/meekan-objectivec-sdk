@@ -24,8 +24,8 @@ NS_ENUM(NSInteger, SDKErrorCodes) {
 
 typedef void (^MeekanResponseError)(NSError *err);
 
-typedef void (^MeekanSuccessGeneric)(id response);
 typedef void (^MeetingResponseSuccess)(MeetingServerResponse *details);
+typedef void (^MeetingDeleteSuccess)(NSString *deletedMeekanId);
 
 
 

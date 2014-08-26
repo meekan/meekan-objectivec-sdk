@@ -111,6 +111,15 @@
     return [self endpointForMeetingDetails:details];
 }
 
+-(HTTPEndpoint *)deleteMeetingWithId:(NSString *)meetingId {
+    HTTPEndpoint *endpoint = nil;
+    if (meetingId && [meetingId length]) {
+        endpoint = [[HTTPEndpoint alloc]init];
+        endpoint.path = [NSString stringWithFormat:@"/rest/meetings/%@", meetingId];
+    }
+    return endpoint;
+}
+
 -(void)setValue:(NSString *)value toKey:(NSString *)keyName inParameters:(NSMutableDictionary *)params {
     if (value && [value length] != 0) {
         [params setObject:value forKey:keyName];
@@ -149,6 +158,7 @@
     }
     return response;
 }
+
 
 -(NSDictionary *)getDataFromResponse:(id)serverResponse orError:(NSError *__autoreleasing *)error {
     if ([serverResponse isKindOfClass:[NSDictionary class]]) {

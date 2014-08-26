@@ -21,6 +21,7 @@
 @optional
 - (HTTPEndpoint *)createMeetingUsing:(MeetingDetails *)details;
 - (HTTPEndpoint *)updateMeetingUsing:(MeetingDetails *)details;
+- (HTTPEndpoint *)deleteMeetingWithId:(NSString *)meetingId;
 /**
  Parses the result into an object. If there is an error, returns nil and in the NSError
  */

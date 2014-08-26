@@ -126,6 +126,31 @@ static BOOL hasEntered;
     [self maximumDelayForAsyncTest:60];
 }
 
+-(void)testCreateAndThenDeleteDraft {
+    MeetingDetails *details = [[MeetingDetails alloc]init];
+    details.accountId = @"4785074604081152";
+    details.title = @"Test";
+    details.durationInMinutes = 10;
+    
+    [self startAsyncTest];
+    [self.sdk createMeeting:details onSuccess:^(MeetingServerResponse *details) {
+        if (details.meetingId) {
+            [self.sdk deleteMeeting:details.meetingId onSuccess:^(NSString *deletedMeekanId) {
+                XCTAssertEqual(details.meetingId, deletedMeekanId, @"Deleted the correct meeting");
+                [self endAsyncTest];
+            } onError:^(NSError *err) {
+                XCTFail(@"Unexpected error: %@", err);
+                [self endAsyncTest];
+            }];
+        }
+        [self endAsyncTest];
+    } onError:^(NSError *err) {
+        XCTFail(@"Unexpected error: %@", err);
+        [self endAsyncTest];
+    }];
+    [self maximumDelayForAsyncTest:60];
+}
+
 - (void)assertValidRemoteMeeting:(id)remoteMeeting {
     XCTAssertTrue([remoteMeeting isKindOfClass:[NSDictionary class]], @"Expected remote meeting to be a dictionary");
     NSDictionary *remote = remoteMeeting;
