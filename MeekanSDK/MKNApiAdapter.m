@@ -58,7 +58,7 @@
     
     [self setValue:details.timeSlotDescription toKey:@"time_slots_desc" inParameters:params];
     if ([details.slots count]) {
-        [params setObject:details.slots forKey:@"slot[]"];
+        [params setObject:details.slots forKey:@"slot"];
     }
     
     [params setObject:@(details.durationInMinutes) forKey:@"duration"];
@@ -76,7 +76,7 @@
             }
             [options addObject:timestamp];
         }];
-        [params setObject:options forKey:@"opt[]"];
+        [params setObject:options forKey:@"opt"];
     }
     
     if (details.location) {
@@ -89,13 +89,13 @@
     }
     if (details.participants) {
         if (details.participants.emails) {
-            [params setObject:[details.participants.emails allObjects] forKey:@"e_inv[]"];
+            [params setObject:[details.participants.emails allObjects] forKey:@"e_inv"];
         }
         if (details.participants.meekanIds) {
-            [params setObject:[details.participants.meekanIds allObjects] forKey:@"k_inv[]"];
+            [params setObject:[details.participants.meekanIds allObjects] forKey:@"k_inv"];
         }
         if (details.participants.phoneNumbers) {
-            [params setObject:[details.participants.phoneNumbers allObjects] forKey:@"p_inv[]"];
+            [params setObject:[details.participants.phoneNumbers allObjects] forKey:@"p_inv"];
         }
     }
     endpoint.parameters = params;
@@ -115,15 +115,19 @@
     MeetingServerResponse *response = nil;
     if (!*error && data) {
         NSString *meetingId = [data objectForKey:@"meeting_id"];
-        NSArray *remote_ids = [data objectForKey:@"remote_id"];
+        NSDictionary *remoteIds = [data objectForKey:@"remote_id"];
+        NSArray *remoteTentativeIds = [data objectForKey:@"remote_tentative_ids"];
         if ([meetingId length]) {
             response = [[MeetingServerResponse alloc]init];
             response.meetingId = meetingId;
-            if (remote_ids) {
-                response.remoteEventIds = remote_ids;
-            } else {
-                response.remoteEventIds = @[];
+            NSMutableArray *remoteEvents = [NSMutableArray array];
+            if (remoteIds) {
+                [remoteEvents addObject:remoteIds];
             }
+            if ([remoteTentativeIds count]) {
+                [remoteEvents addObjectsFromArray:remoteTentativeIds];
+            }
+            response.remoteEventIds = remoteEvents;
         } else {
             [self insertErrorCode:UNEXPECTED_RESPONSE_FORMAT andMessage:@"Expected response to contain a meeting id" into:error];
         }

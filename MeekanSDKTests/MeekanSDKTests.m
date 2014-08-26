@@ -45,7 +45,7 @@ static BOOL hasEntered;
     [super tearDown];
 }
 
-- (void)testCreateMeeting
+- (void)testCreateDraftMeeting
 {
 
     MeetingDetails *details = [[MeetingDetails alloc]init];
@@ -57,12 +57,81 @@ static BOOL hasEntered;
     [self.sdk createMeeting:details onSuccess:^(MeetingServerResponse *details) {
         XCTAssertNotNil(details, @"Expected returned details");
         XCTAssertNotNil(details.meetingId, @"Expected Created meeting ID");
+        XCTAssertNotNil(details.remoteEventIds, @"Expected non-empty remote list");
+        XCTAssertTrue([details.remoteEventIds count] == 0, @"Should not create remote meetings, returned: %@", details.remoteEventIds);
         [self endAsyncTest];
     } onError:^(NSError *err) {
         XCTFail(@"Unexpected error: %@", err);
         [self endAsyncTest];
     }];
     [self maximumDelayForAsyncTest:60];
+}
+
+
+- (void)testCreateSingleMeeting
+{
+    
+    MeetingDetails *details = [[MeetingDetails alloc]init];
+    details.accountId = @"4785074604081152";
+    details.title = @"Test Single";
+    details.durationInMinutes = 10;
+    details.options = [NSSet setWithObject:[NSDate date]];
+    
+    [self startAsyncTest];
+    [self.sdk createMeeting:details onSuccess:^(MeetingServerResponse *details) {
+        XCTAssertNotNil(details, @"Expected returned details");
+        XCTAssertNotNil(details.meetingId, @"Expected Created meeting ID");
+        XCTAssertNotNil(details.remoteEventIds, @"Expected non-empty remote list");
+        XCTAssertTrue([details.remoteEventIds count] == 1, @"Should create single remote meeting, returned: %@", details.remoteEventIds);
+        [self assertValidRemoteMeeting:[details.remoteEventIds firstObject]];
+        [self endAsyncTest];
+    } onError:^(NSError *err) {
+        XCTFail(@"Unexpected error: %@", err);
+        [self endAsyncTest];
+    }];
+    [self maximumDelayForAsyncTest:60];
+}
+
+- (void)testCreateMultipleMeeting
+{
+    MeetingDetails *details = [[MeetingDetails alloc]init];
+    details.accountId = @"4785074604081152";
+    details.title = @"Test Multiple";
+    details.durationInMinutes = 10;
+    NSDate *start = [NSDate dateWithTimeIntervalSince1970:1409477400];
+    NSSet *options = [NSSet setWithObjects:
+                        [start dateByAddingTimeInterval:3600],
+                        [start dateByAddingTimeInterval:7200],
+                        [start dateByAddingTimeInterval:10800], nil];
+    details.options = options;
+    
+    [self startAsyncTest];
+    [self.sdk createMeeting:details onSuccess:^(MeetingServerResponse *details) {
+        XCTAssertNotNil(details, @"Expected returned details");
+        XCTAssertNotNil(details.meetingId, @"Expected Created meeting ID");
+        XCTAssertNotNil(details.remoteEventIds, @"Expected non-empty remote list");
+        XCTAssertTrue([details.remoteEventIds count] == [options count],
+                      @"Should create %lu remote meetings, returned: %@", (unsigned long)[options count], details.remoteEventIds);
+        for (NSDictionary *remoteEvent in details.remoteEventIds) {
+            [self assertValidRemoteMeeting:remoteEvent];
+            NSDate *start = [NSDate dateWithTimeIntervalSince1970:[[remoteEvent objectForKey:@"start"] integerValue]];
+
+            XCTAssertTrue([options containsObject:start], @"Scheduled time [%@] should be in the requested times: %@", start, options);
+        }
+        [self endAsyncTest];
+    } onError:^(NSError *err) {
+        XCTFail(@"Unexpected error: %@", err);
+        [self endAsyncTest];
+    }];
+    [self maximumDelayForAsyncTest:60];
+}
+
+- (void)assertValidRemoteMeeting:(id)remoteMeeting {
+    XCTAssertTrue([remoteMeeting isKindOfClass:[NSDictionary class]], @"Expected remote meeting to be a dictionary");
+    NSDictionary *remote = remoteMeeting;
+    XCTAssertNotNil([remote objectForKey:@"remote_id"], @"Expected remote meeting to have a remote id");
+    XCTAssertTrue([remote objectForKey:@"start"], @"Expected remote meeting to contain start time");
+    XCTAssertTrue([remote objectForKey:@"duration"], @"Expected remote meeting to contain duration");
 }
 
 
