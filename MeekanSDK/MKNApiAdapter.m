@@ -120,6 +120,13 @@
     return endpoint;
 }
 
+-(HTTPEndpoint *)currentUserDetails {
+    HTTPEndpoint *endpoint = [[HTTPEndpoint alloc]init];
+    endpoint.path = @"/rest/auth";
+    endpoint.parameters = @{};
+    return endpoint;
+}
+
 -(void)setValue:(NSString *)value toKey:(NSString *)keyName inParameters:(NSMutableDictionary *)params {
     if (value && [value length] != 0) {
         [params setObject:value forKey:keyName];
@@ -157,6 +164,29 @@
         }
     }
     return response;
+}
+
+-(ConnectedUser *)parseCurrentUserDetails:(id)serverResponse andError:(NSError *__autoreleasing *)error {
+    NSDictionary *data = [self getDataFromResponse:serverResponse orError:error];
+    ConnectedUser *user = nil;
+    if (!*error && data) {
+        user = [[ConnectedUser alloc]init];
+        user.name = [data objectForKey:@"name"];
+        user.userId = [data objectForKey:@"user_id"];
+        user.primaryEmail = [data objectForKey:@"primary_email"];
+        NSMutableArray *parsedAccounts = [NSMutableArray array];
+        for (NSDictionary *responseAccount in [data objectForKey:@"accounts"]) {
+            ConnectedAccount *account = [[ConnectedAccount alloc]init];
+            account.meekanId = [responseAccount objectForKey:@"id"];
+            account.identifier = [responseAccount objectForKey:@"identifier"];
+            account.name = [responseAccount objectForKey:@"name"];
+            account.accountType = [responseAccount objectForKey:@"type"];
+            [parsedAccounts addObject:account];
+        }
+        user.accounts = parsedAccounts;
+    }
+    
+    return user;
 }
 
 

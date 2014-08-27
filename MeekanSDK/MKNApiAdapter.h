@@ -19,6 +19,7 @@
 - (NSError *)checkIfError:(id)baseResult;
 
 @optional
+- (HTTPEndpoint *)currentUserDetails;
 - (HTTPEndpoint *)createMeetingUsing:(MeetingDetails *)details;
 - (HTTPEndpoint *)updateMeetingUsing:(MeetingDetails *)details;
 - (HTTPEndpoint *)deleteMeetingWithId:(NSString *)meetingId;
@@ -27,6 +28,7 @@
  */
 - (MeetingServerResponse *)parseCreateMeetingResponseFrom:(id)serverResponse andError:(NSError * __autoreleasing *)error;
 - (MeetingServerResponse *)parseUpdateMeetingResponseFrom:(id)serverResponse andError:(NSError * __autoreleasing *)error;
+- (ConnectedUser *)parseCurrentUserDetails:(id)serverResponse andError:(NSError * __autoreleasing *)error;
 @end
 
 @interface ApiV1Adapter : NSObject <ApiAdapter>

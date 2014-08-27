@@ -18,6 +18,10 @@
 
 - (id)initWithApiKey:(NSString *)apiKey;
 
+- (void)connectWithExchange:(NSString *)username withPassword:(NSString *)password withEmail:(NSString *)email withServerUrl:(NSString *)url andDomain:(NSString *)domain onSuccess:(ConnectedUserSuccess)success onError:(MeekanResponseError)error;
+
+- (void)connectedUserDetailsWithSuccess:(ConnectedUserSuccess)success onError:(MeekanResponseError)error;
+
 - (void)createMeeting:(MeetingDetails *)meeting onSuccess:(MeetingResponseSuccess)success onError:(MeekanResponseError)error;
 - (void)updateMeeting:(MeetingDetails *)meeting onSuccess:(MeetingResponseSuccess)success onError:(MeekanResponseError)error;
 - (void)deleteMeeting:(NSString *)meetingId onSuccess:(MeetingDeleteSuccess)success onError:(MeekanResponseError)error;

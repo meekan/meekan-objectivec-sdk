@@ -151,6 +151,22 @@ static BOOL hasEntered;
     [self maximumDelayForAsyncTest:60];
 }
 
+-(void)testUserIsConnectedWithTestSession {
+    [self startAsyncTest];
+
+    [self.sdk connectedUserDetailsWithSuccess:^(ConnectedUser *user) {
+        XCTAssertNotNil(user, @"Expected connected user");
+        XCTAssertTrue([user.userId length] != 0, @"Expected user with Meekan ID, reeived empty value");
+        XCTAssertTrue([user.accounts count] != 0, @"Expected user with accounts, received empty");
+        [self endAsyncTest];
+    } onError:^(NSError *err) {
+        XCTFail(@"Unexpected error: %@", err);
+        [self endAsyncTest];
+    }];
+
+    [self maximumDelayForAsyncTest:60];
+}
+
 - (void)assertValidRemoteMeeting:(id)remoteMeeting {
     XCTAssertTrue([remoteMeeting isKindOfClass:[NSDictionary class]], @"Expected remote meeting to be a dictionary");
     NSDictionary *remote = remoteMeeting;

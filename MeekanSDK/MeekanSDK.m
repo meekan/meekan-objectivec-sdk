@@ -50,6 +50,29 @@ static MeekanSDK *sharedInstance = nil;
     return self;
 }
 
+- (void)connectWithExchange:(NSString *)username withPassword:(NSString *)password withEmail:(NSString *)email withServerUrl:(NSString *)url andDomain:(NSString *)domain onSuccess:(ConnectedUserSuccess)successCallback onError:(MeekanResponseError)errorCallback {
+    if ([self isAllNotEmpty:@[username, password, email, url, domain]]) {
+        NSDictionary *params = @{};
+        [self.manager GET:@"/social_login/exchange/complete" parameters:@{} success:^(NSURLSessionDataTask *task, id responseObject) {
+            <#code#>
+        } failure:^(NSURLSessionDataTask *task, NSError *error) {
+            errorCallback(error);
+        }];
+    } else {
+        NSError *err = [NSError errorWithDomain:MEEKAN_CLIENT_ERROR_DOMAIN code:INVALID_PARAMETERS
+                                       userInfo:@{NSLocalizedDescriptionKey: [NSString stringWithFormat:@"Please review required parameters for Exchange Connection %@",self.apiAdapter]}];
+        errorCallback(err);
+    }
+}
+
+-(BOOL)isAllNotEmpty:(NSArray *)params {
+    BOOL allOk = YES;
+    for (NSString *param in params) {
+        allOk &= [param length] != 0;
+    }
+    return allOk;
+}
+
 -(void)createMeeting:(MeetingDetails *)meeting onSuccess:(MeetingResponseSuccess)successCallback onError:(MeekanResponseError)errorCallback {
     if ([self.apiAdapter respondsToSelector:@selector(createMeetingUsing:)]) {
         HTTPEndpoint *endpoint = [self.apiAdapter createMeetingUsing:meeting];
@@ -113,7 +136,7 @@ static MeekanSDK *sharedInstance = nil;
 }
 
 -(void)deleteMeeting:(NSString *)meetingId onSuccess:(MeetingDeleteSuccess)successCallback onError:(MeekanResponseError)errorCallback {
-    if ([self.apiAdapter respondsToSelector:@selector(updateMeetingUsing:)]) {
+    if ([self.apiAdapter respondsToSelector:@selector(deleteMeetingWithId:)]) {
         HTTPEndpoint *endpoint = [self.apiAdapter deleteMeetingWithId:meetingId];
         if (endpoint) {
             [self.manager DELETE:endpoint.path parameters:endpoint.parameters success:^(NSURLSessionDataTask *task, id responseObject) {
@@ -128,12 +151,44 @@ static MeekanSDK *sharedInstance = nil;
             }];
         } else {
             NSError *err = [NSError errorWithDomain:MEEKAN_CLIENT_ERROR_DOMAIN code:INVALID_PARAMETERS
-                                           userInfo:@{NSLocalizedDescriptionKey: [NSString stringWithFormat:@"Please review required parameters for Update Meeting %@",self.apiAdapter]}];
+                                           userInfo:@{NSLocalizedDescriptionKey: [NSString stringWithFormat:@"Please review required parameters for Delete Meeting %@",self.apiAdapter]}];
             errorCallback(err);
         }
     } else {
         NSError *err = [NSError errorWithDomain:MEEKAN_CLIENT_ERROR_DOMAIN code:NOT_IMPLEMENTED_IN_THIS_SDK
-                                       userInfo:@{NSLocalizedDescriptionKey: [NSString stringWithFormat:@"Update Meeting is not supported in adapter %@",self.apiAdapter]}];
+                                       userInfo:@{NSLocalizedDescriptionKey: [NSString stringWithFormat:@"Delete Meeting is not supported in adapter %@",self.apiAdapter]}];
+        errorCallback(err);
+    }
+}
+
+- (void)connectedUserDetailsWithSuccess:(ConnectedUserSuccess)successCallback onError:(MeekanResponseError)errorCallback {
+    if ([self.apiAdapter respondsToSelector:@selector(currentUserDetails)]) {
+        HTTPEndpoint *endpoint = [self.apiAdapter currentUserDetails];
+        if (endpoint) {
+            NSLog(@"%@", [self.manager.session.configuration.HTTPCookieStorage cookiesForURL:[NSURL URLWithString:@"http://localhost:8080"]]);
+            [self.manager GET:endpoint.path parameters:endpoint.parameters success:^(NSURLSessionDataTask *task, id responseObject) {
+                NSError *errorInRespone = [self.apiAdapter checkIfError:responseObject];
+                if (!errorInRespone) {
+                    ConnectedUser *user = [self.apiAdapter parseCurrentUserDetails:responseObject andError:&errorInRespone];
+                    if (!errorInRespone) {
+                        successCallback(user);
+                    } else {
+                        errorCallback(errorInRespone);
+                    }
+                } else {
+                    errorCallback(errorInRespone);
+                }
+            } failure:^(NSURLSessionDataTask *task, NSError *error) {
+                errorCallback(error);
+            }];
+        } else {
+            NSError *err = [NSError errorWithDomain:MEEKAN_CLIENT_ERROR_DOMAIN code:INVALID_PARAMETERS
+                                           userInfo:@{NSLocalizedDescriptionKey: [NSString stringWithFormat:@"Please review required parameters for Current User %@",self.apiAdapter]}];
+            errorCallback(err);
+        }
+    } else {
+        NSError *err = [NSError errorWithDomain:MEEKAN_CLIENT_ERROR_DOMAIN code:NOT_IMPLEMENTED_IN_THIS_SDK
+                                       userInfo:@{NSLocalizedDescriptionKey: [NSString stringWithFormat:@"Current User is not supported in adapter %@",self.apiAdapter]}];
         errorCallback(err);
     }
 }

@@ -23,3 +23,11 @@
 @implementation MeetingServerResponse
 
 @end
+
+@implementation ConnectedAccount
+
+@end
+
+@implementation ConnectedUser
+
+@end

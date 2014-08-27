@@ -12,6 +12,7 @@
 @class MeetingParticipants;
 @class MeetingLocation;
 @class MeetingServerResponse;
+@class ConnectedUser;
 
 static NSString *MEEKAN_CLIENT_ERROR_DOMAIN = @"MeekanSDK";
 
@@ -26,7 +27,7 @@ typedef void (^MeekanResponseError)(NSError *err);
 
 typedef void (^MeetingResponseSuccess)(MeetingServerResponse *details);
 typedef void (^MeetingDeleteSuccess)(NSString *deletedMeekanId);
-
+typedef void (^ConnectedUserSuccess)(ConnectedUser *user);
 
 
 typedef NS_ENUM(NSUInteger, RepeatInterval) {
@@ -73,6 +74,20 @@ typedef NS_ENUM(NSUInteger, MeetingVote) {
 @property (nonatomic) RepeatInterval repeatInterval;
 
 @property (nonatomic) NSString *timezone;
+@end
+
+@interface ConnectedAccount : NSObject
+@property (nonatomic, strong) NSString *meekanId;
+@property (nonatomic, strong) NSString *identifier;
+@property (nonatomic, strong) NSString *accountType;
+@property (nonatomic, strong) NSString *name;
+@end
+
+@interface ConnectedUser: NSObject
+@property (nonatomic, strong) NSString *userId;
+@property (nonatomic, strong) NSString *name;
+@property (nonatomic, strong) NSString *primaryEmail;
+@property (nonatomic, strong) NSArray *accounts;
 @end
 
 @interface MeetingParticipants : NSObject
