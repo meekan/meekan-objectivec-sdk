@@ -13,6 +13,7 @@
 @class MeetingLocation;
 @class MeetingServerResponse;
 @class ConnectedUser;
+@class MeetingList;
 
 static NSString *MEEKAN_CLIENT_ERROR_DOMAIN = @"MeekanSDK";
 
@@ -28,6 +29,7 @@ typedef void (^MeekanResponseError)(NSError *err);
 typedef void (^MeetingResponseSuccess)(MeetingServerResponse *details);
 typedef void (^MeetingDeleteSuccess)(NSString *deletedMeekanId);
 typedef void (^ConnectedUserSuccess)(ConnectedUser *user);
+typedef void (^MeetingListSuccess)(MeetingList *meetingList);
 
 
 typedef NS_ENUM(NSUInteger, RepeatInterval) {
@@ -39,7 +41,7 @@ typedef NS_ENUM(NSUInteger, RepeatInterval) {
     YEARLY = 365
 };
 
-typedef NS_ENUM(NSUInteger, MeetingVote) {
+typedef NS_ENUM(NSUInteger, PollVote) {
     NOT_YET = 0,
     CUSTOM = 1,
     ALWAYS = 2,
@@ -106,6 +108,7 @@ typedef NS_ENUM(NSUInteger, MeetingVote) {
 @interface MeetingServerResponse : NSObject
 @property (nonatomic, strong) NSString *meetingId;
 /**
+ Array of MeetingRemoteEvent
  Array consisting of @[@{
  remote_id: "csiebq26o9l0rdibbvc5peloso", // ID of the created event on the calendar endpoint
  start: 1404282883,                       // Timestamp of the created event
@@ -113,4 +116,35 @@ typedef NS_ENUM(NSUInteger, MeetingVote) {
  }, ...]
  */
 @property (nonatomic, strong) NSArray *remoteEventIds;
+@end
+
+@interface MeetingRemoteEvent : NSObject
+@property (nonatomic, strong) NSString *remoteId;
+@property (nonatomic, strong) NSDate *start;
+@property (nonatomic) NSUInteger duration;
+@end
+
+@interface MeetingFromServer : NSObject
+@property (nonatomic, strong) NSDate *lastUpdate;
+@property (nonatomic, strong) NSString *meetingId;
+@property (nonatomic) BOOL isDeleted;
+@property (nonatomic, strong) MeetingDetails *details;
+@property (nonatomic, strong) NSArray *remoteIds;
+@property (nonatomic, strong) NSDictionary *votes;
+@property (nonatomic, strong) NSString *organizerEmail;
+@end
+
+@interface MeetingList : NSObject
+@property (nonatomic, strong) NSArray *meetings;
+@property (nonatomic) BOOL hasMore;
+@end
+
+@interface MeetingVote : NSObject
+
+@property (nonatomic, strong) NSDate *lastUpdate;
+@property (nonatomic, strong) NSSet *preferredTimes;
+@property (nonatomic) PollVote vote;
+@property (nonatomic, strong) NSString *accountId;
+@property (nonatomic, strong) NSString *email;
+@property (nonatomic, strong) NSString *phone;
 @end

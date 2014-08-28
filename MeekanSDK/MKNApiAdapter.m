@@ -51,7 +51,7 @@
     //    @property (nonatomic, strong) MeetingParticipants *participants;
     //
     [self setValue:details.accountId toKey:@"account_id" inParameters:params];
-    [self setValue:details.title toKey:@"title" inParameters:params];
+    [self setValue:details.title toKey:@"meeting_name" inParameters:params];
     [self setValue:details.calendarInAccount toKey:@"calendar_id" inParameters:params];
     [self setValue:details.timezone toKey:@"timezone" inParameters:params];
     
@@ -120,6 +120,15 @@
     return endpoint;
 }
 
+-(HTTPEndpoint *)listMeetingsSince:(NSDate *)timestamp {
+    HTTPEndpoint *endpoint = [[HTTPEndpoint alloc]init];
+    endpoint.path = @"/rest/meetings";
+    if (timestamp) {
+        endpoint.parameters = @{@"last_timestamp" : @([timestamp timeIntervalSince1970])};
+    }
+    return endpoint;
+}
+
 -(HTTPEndpoint *)currentUserDetails {
     HTTPEndpoint *endpoint = [[HTTPEndpoint alloc]init];
     endpoint.path = @"/rest/auth";
@@ -141,29 +150,124 @@
     return [self parseMeetingChangeResponseFrom:serverResponse andError:error];
 }
 
+- (NSMutableArray *)parseRemoteEventsFrom:(NSDictionary *)data {
+    NSMutableArray *remoteEvents = [NSMutableArray array];
+    NSDictionary *remoteIds = [data objectForKey:@"remote_id"];
+    NSArray *remoteTentativeIds = [data objectForKey:@"remote_tentative_ids"];
+    if (remoteIds) {
+        [remoteEvents addObject:remoteIds];
+    }
+    if ([remoteTentativeIds count]) {
+        [remoteEvents addObjectsFromArray:remoteTentativeIds];
+    }
+    return remoteEvents;
+}
+
 -(MeetingServerResponse *)parseMeetingChangeResponseFrom:(id)serverResponse andError:(NSError *__autoreleasing *)error {
     NSDictionary *data = [self getDataFromResponse:serverResponse orError:error];
     MeetingServerResponse *response = nil;
     if (!*error && data) {
         NSString *meetingId = [data objectForKey:@"meeting_id"];
-        NSDictionary *remoteIds = [data objectForKey:@"remote_id"];
-        NSArray *remoteTentativeIds = [data objectForKey:@"remote_tentative_ids"];
         if ([meetingId length]) {
             response = [[MeetingServerResponse alloc]init];
             response.meetingId = meetingId;
-            NSMutableArray *remoteEvents = [NSMutableArray array];
-            if (remoteIds) {
-                [remoteEvents addObject:remoteIds];
-            }
-            if ([remoteTentativeIds count]) {
-                [remoteEvents addObjectsFromArray:remoteTentativeIds];
-            }
+            NSMutableArray *remoteEvents;
+            remoteEvents = [self parseRemoteEventsFrom:data];
             response.remoteEventIds = remoteEvents;
         } else {
             [self insertErrorCode:UNEXPECTED_RESPONSE_FORMAT andMessage:@"Expected response to contain a meeting id" into:error];
         }
     }
     return response;
+}
+
+-(MeetingList *)parseMeetingList:(id)serverResponse andError:(NSError *__autoreleasing *)error {
+    NSDictionary *data = [self getDataFromResponse:serverResponse orError:error];
+    MeetingList *list = [[MeetingList alloc]init];
+    [list setHasMore:[[data objectForKey:@"more"] boolValue]];
+    NSMutableArray *meetings = [NSMutableArray array];
+    for (NSDictionary *meeting in [data objectForKey:@"meetings"]) {
+        MeetingFromServer *fromServer = [[MeetingFromServer alloc]init];
+        /*
+         @property (nonatomic, strong) MeetingDetails *details;
+         */
+        if ([meeting objectForKey:@"last_update"]) {
+            NSTimeInterval lastUpdate = [[meeting objectForKey:@"last_update"] doubleValue];
+            fromServer.lastUpdate = [NSDate dateWithTimeIntervalSince1970:lastUpdate];
+        }
+        fromServer.meetingId = [meeting objectForKey:@"id"];
+        fromServer.isDeleted = [[meeting objectForKey:@"is_deleted"] boolValue];
+        fromServer.remoteIds = [self parseRemoteEventsFrom:meeting];
+        fromServer.votes = [self parseVotesFromMeetingDetails:[meeting objectForKey:@"votes"]];
+        fromServer.organizerEmail = [meeting objectForKey:@"organizer_email"];
+        fromServer.details = [self parseMeetingDetailsFromMeetingList:meeting];
+        [meetings addObject:fromServer];
+    }
+    [list setMeetings:meetings];
+    return list;
+}
+
+-(NSSet *)datesFromListOfTimestamps:(NSArray *)timestamps {
+    NSMutableSet *times = [NSMutableSet set];
+    for (NSNumber *preferredTime in timestamps) {
+        [times addObject:[NSDate dateWithTimeIntervalSince1970:[preferredTime doubleValue]]];
+    }
+    return times;
+}
+
+-(MeetingDetails *)parseMeetingDetailsFromMeetingList:(NSDictionary *)data {
+    MeetingDetails *details = [[MeetingDetails alloc]init];
+    details.title = [data objectForKey:@"name"];
+    details.durationInMinutes = [[data objectForKey:@"duration"] integerValue];
+    details.accountId = [data objectForKey:@"organizer"];
+    details.options = [self datesFromListOfTimestamps:[data objectForKey:@"options"] ];
+    details.timeSlotDescription = [data objectForKey:@"time_desc"];
+    details.reminderMethod = [data objectForKey:@"reminder_method"];
+    details.reminderMinutesBefore = [[data objectForKey:@"reminder_minutes_before"] integerValue];
+    details.repeatInterval = [[data objectForKey:@"repeat_interval"] integerValue];
+    details.timezone = [data objectForKey:@"timezone"] ? [data objectForKey:@"timezone"] : @"UTC";
+    details.participants = [self parseMeetingParticipantsFromArrayOfAccounts:[data objectForKey:@"invitees"]];
+    details.location = [self parseMeetingLocationFromMeetingServerResponse:data];
+    return details;
+}
+
+-(MeetingLocation *)parseMeetingLocationFromMeetingServerResponse:(NSDictionary *)data {
+    MeetingLocation *location = [[MeetingLocation alloc]init];
+    location.shortDesc = [data objectForKey:@"location_desc"];
+    location.address = [data objectForKey:@"location_addresss"];
+    if ([data objectForKey:@"location_latlong"]) {
+        NSArray *latlong = [[data objectForKey:@"location_latlong"] componentsSeparatedByString:@","];
+        if ([latlong count] == 2) {
+            location.latitude = [latlong[0] doubleValue];
+            location.longitude = [latlong[1] doubleValue];
+        }
+    }
+    return location;
+}
+
+
+-(MeetingParticipants *)parseMeetingParticipantsFromArrayOfAccounts:(NSArray *)accounts {
+    MeetingParticipants *participants = [[MeetingParticipants alloc]init];
+    participants.meekanIds = [NSSet setWithArray:accounts];
+    return participants;
+}
+
+-(NSDictionary *)parseVotesFromMeetingDetails:(NSDictionary *)votes {
+    NSMutableDictionary *parsedVotes = [NSMutableDictionary dictionary];
+    [votes enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
+        NSString *voterId = key;
+        NSDictionary *serverVote;
+        MeetingVote *vote = [[MeetingVote alloc]init];
+        vote.accountId = voterId;
+        vote.lastUpdate = [NSDate dateWithTimeIntervalSince1970:[[serverVote objectForKey:@"updated"] doubleValue]];
+        vote.preferredTimes = [self datesFromListOfTimestamps:[serverVote objectForKey:@"preferred"]];
+        vote.email = [serverVote objectForKey:@"email"];
+        vote.phone = [serverVote objectForKey:@"phone"];
+        vote.vote = [[serverVote objectForKey:@"resp_type"] integerValue];
+        
+        [parsedVotes setObject:vote forKey:voterId];
+    }];
+    return parsedVotes;
 }
 
 -(ConnectedUser *)parseCurrentUserDetails:(id)serverResponse andError:(NSError *__autoreleasing *)error {

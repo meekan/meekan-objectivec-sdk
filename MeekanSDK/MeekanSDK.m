@@ -178,6 +178,37 @@ static MeekanSDK *sharedInstance = nil;
     }
 }
 
+-(void)listMeetingsForAccountSince:(NSDate *)timestamp onSuccess:(MeetingListSuccess)successCallback onError:(MeekanResponseError)errorCallback {
+    if ([self.apiAdapter respondsToSelector:@selector(listMeetingsSince:)]) {
+        HTTPEndpoint *endpoint = [self.apiAdapter listMeetingsSince:timestamp];
+        if (endpoint) {
+            [self.manager GET:endpoint.path parameters:endpoint.parameters success:^(NSURLSessionDataTask *task, id responseObject) {
+                NSError *errorInRespone = [self.apiAdapter checkIfError:responseObject];
+                if (!errorInRespone) {
+                    MeetingList *list = [self.apiAdapter parseMeetingList:responseObject andError:&errorInRespone];
+                    if (!errorInRespone) {
+                        successCallback(list);
+                    } else {
+                        errorCallback(errorInRespone);
+                    }
+                } else {
+                    errorCallback(errorInRespone);
+                }
+            } failure:^(NSURLSessionDataTask *task, NSError *error) {
+                errorCallback(error);
+            }];
+        } else {
+            NSError *err = [NSError errorWithDomain:MEEKAN_CLIENT_ERROR_DOMAIN code:INVALID_PARAMETERS
+                                           userInfo:@{NSLocalizedDescriptionKey: [NSString stringWithFormat:@"Please review required parameters for List Meetings %@",self.apiAdapter]}];
+            errorCallback(err);
+        }
+    } else {
+        NSError *err = [NSError errorWithDomain:MEEKAN_CLIENT_ERROR_DOMAIN code:NOT_IMPLEMENTED_IN_THIS_SDK
+                                       userInfo:@{NSLocalizedDescriptionKey: [NSString stringWithFormat:@"List Meetings is not supported in adapter %@",self.apiAdapter]}];
+        errorCallback(err);
+    }
+}
+
 - (void)extractConnectedUser:(id)responseObject error:(NSError **)errorInRespone_p errorCallback:(MeekanResponseError)errorCallback successCallback:(ConnectedUserSuccess)successCallback {
     ConnectedUser *user = [self.apiAdapter parseCurrentUserDetails:responseObject andError:&(*errorInRespone_p)];
     if (!(*errorInRespone_p)) {

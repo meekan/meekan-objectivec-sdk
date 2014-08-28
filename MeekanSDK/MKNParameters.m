@@ -31,3 +31,19 @@
 @implementation ConnectedUser
 
 @end
+
+@implementation MeetingRemoteEvent
+
+@end
+
+@implementation MeetingList
+
+@end
+
+@implementation MeetingVote
+
+@end
+
+@implementation MeetingFromServer
+
+@end

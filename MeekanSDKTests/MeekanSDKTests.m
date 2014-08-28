@@ -104,6 +104,7 @@ static BOOL hasEntered;
                         [start dateByAddingTimeInterval:7200],
                         [start dateByAddingTimeInterval:10800], nil];
     details.options = options;
+    details.participants = [[MeetingParticipants alloc]init];
     
     [self startAsyncTest];
     [self.sdk createMeeting:details onSuccess:^(MeetingServerResponse *details) {
@@ -144,6 +145,34 @@ static BOOL hasEntered;
             }];
         }
         [self endAsyncTest];
+    } onError:^(NSError *err) {
+        XCTFail(@"Unexpected error: %@", err);
+        [self endAsyncTest];
+    }];
+    [self maximumDelayForAsyncTest:60];
+}
+
+-(void)testMeetingListIsReturnedWithOneMeetingAfterCreatingIt {
+    MeetingDetails *details = [[MeetingDetails alloc]init];
+    details.accountId = @"4785074604081152";
+    details.title = @"Test";
+    details.durationInMinutes = 10;
+    
+    [self startAsyncTest];
+    NSDate *start = [NSDate date];
+    [self.sdk createMeeting:details onSuccess:^(MeetingServerResponse *details) {
+        NSString *newlyCreatedId = [details meetingId];
+        [self.sdk listMeetingsForAccountSince:start onSuccess:^(MeetingList *meetingList) {
+            XCTAssertTrue(!meetingList.hasMore, @"Returned all expected meetings");
+            XCTAssertTrue([meetingList.meetings count] == 1, @"Expected only the meeting created after the test start");
+            MeetingFromServer *meeting = meetingList.meetings[0];
+            XCTAssertTrue([meeting meetingId], @"Expected only the meeting created after the test start");
+            XCTAssertEqualObjects([meeting meetingId], newlyCreatedId, @"Expected same created meeting");
+            [self endAsyncTest];
+        } onError:^(NSError *err) {
+            XCTFail(@"Unexpected error: %@", err);
+            [self endAsyncTest];
+        }];
     } onError:^(NSError *err) {
         XCTFail(@"Unexpected error: %@", err);
         [self endAsyncTest];
