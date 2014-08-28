@@ -25,13 +25,13 @@ static BOOL hasEntered;
     NSHTTPCookie *session = [NSHTTPCookie cookieWithProperties:
                              @{NSHTTPCookieName: @"session",
                                NSHTTPCookiePath: @"/",
-                               NSHTTPCookieValue: @"eyJnb29nbGVfb2F1dGgyIjoie1wibGFzdF9uYW1lXCI6IFwiTWVla2FuXCIsIFwiZW1haWxcIjogXCJleWFsQG1lZWthbi5jb21cIiwgXCJmdWxsX25hbWVcIjogXCJFeWFsIE1lZWthblwiLCBcImlkXCI6IFwiMTE1NzY1MTM3NTk4MDEyNzgyMzE2XCIsIFwiZmlyc3RfbmFtZVwiOiBcIkV5YWxcIn0iLCJfbWVzc2FnZXMiOltbIldlbGNvbWUhICBZb3UgaGF2ZSBiZWVuIHJlZ2lzdGVyZWQgYXMgYSBuZXcgdXNlciBhbmQgbG9nZ2VkIGluIHRocm91Z2ggR29vZ2xlIE9BdXRoMi4iLCJzdWNjZXNzIl1dfQ==|1409040847|19cb45250f110ca0ecbff3c63344e49a0f87bfe5",
+                               NSHTTPCookieValue: @"eyJfbWVzc2FnZXMiOltbIldlbGNvbWUhICBZb3UgaGF2ZSBiZWVuIHJlZ2lzdGVyZWQgYXMgYSBuZXcgdXNlciBhbmQgbG9nZ2VkIGluIHRocm91Z2ggR29vZ2xlIE9BdXRoMi4iLCJzdWNjZXNzIl1dLCJzdGF0ZSI6IllFUlZUVTZRWDI3TkRWRlJZQ1paUUcySlNOUlE3UEhRIiwiZ29vZ2xlX29hdXRoMiI6IntcImZ1bGxfbmFtZVwiOiBcIkV5YWwgTWVla2FuXCIsIFwiaWRcIjogXCIxMTU3NjUxMzc1OTgwMTI3ODIzMTZcIiwgXCJmaXJzdF9uYW1lXCI6IFwiRXlhbFwiLCBcImxhc3RfbmFtZVwiOiBcIk1lZWthblwiLCBcImVtYWlsXCI6IFwiZXlhbEBtZWVrYW4uY29tXCJ9In0=|1409210860|871179f93c3b00f5a3d2e3f1869f15f873e35992",
                                NSHTTPCookieVersion: @"1",
                                NSHTTPCookieDomain: @"localhost"}];
     NSHTTPCookie *sessionName = [NSHTTPCookie cookieWithProperties:
                                  @{NSHTTPCookieName: @"session_name",
                                    NSHTTPCookiePath: @"/",
-                                   NSHTTPCookieValue: @"eyJfdXNlciI6WzU2Mjk0OTk1MzQyMTMxMjAsMSwiZkM1cHFiaVRNYnJJdWlrdXdWak1mZiIsMTQwOTA0MDg0NiwxNDA5MDQwODQ2XX0=|1409040918|264c90c68a84e02582f8cff09fa2a051d14d03e1",
+                                   NSHTTPCookieValue: @"eyJfdXNlciI6WzU2Mjk0OTk1MzQyMTMxMjAsMSwiVjZtbzRsTG5yaTRLZGltSmZGUnJDcCIsMTQwOTIxMDg1OSwxNDA5MjEwODU5XX0=|1409210865|9e9d4c9fd956b061b69d9ea98f11ca68c694043d",
                                    NSHTTPCookieVersion: @"1",
                                    NSHTTPCookieDomain: @"localhost"}];
     [[NSHTTPCookieStorage sharedHTTPCookieStorage] setCookie:session];
@@ -165,6 +165,40 @@ static BOOL hasEntered;
     }];
 
     [self maximumDelayForAsyncTest:60];
+}
+
+-(void)testConnectUserWithExchange {
+    [self startAsyncTest];
+    // Disconnect from all accounts
+    for (NSHTTPCookie *cookie in [[NSHTTPCookieStorage sharedHTTPCookieStorage] cookiesForURL:[NSURL URLWithString:@"http://localhost"]]) {
+        [[NSHTTPCookieStorage sharedHTTPCookieStorage] deleteCookie:cookie];
+    }
+    
+    [self.sdk connectedUserDetailsWithSuccess:^(ConnectedUser *user) {
+        XCTFail(@"Expected to be disconnected, received %@", user);
+        [self endAsyncTest];
+    } onError:^(NSError *err) {
+        NSDictionary *accountParams = [self readTestAccountWithId:@"exchange1"];
+        [self.sdk connectWithExchangeUser:accountParams[@"username"] withPassword:accountParams[@"password"] withEmail:accountParams[@"email"] withServerUrl:accountParams[@"url"] andDomain:accountParams[@"domain"] onSuccess:^(ConnectedUser *user) {
+            XCTAssertNotNil(user, @"Expected connected user");
+            XCTAssertTrue([user.userId length] != 0, @"Expected user with Meekan ID, reeived empty value");
+            XCTAssertTrue([user.accounts count] == 1, @"Expected user with one account, received %lu", [user.accounts count] );
+            XCTAssertEqualObjects(user.primaryEmail, accountParams[@"email"], @"Expected same email address as registered");
+            [self endAsyncTest];
+        } onError:^(NSError *err) {
+            XCTFail(@"Unexpected error: %@", err);
+            [self endAsyncTest];
+        }];
+    }];
+    
+    
+    [self maximumDelayForAsyncTest:60];
+}
+
+-(NSDictionary *)readTestAccountWithId:(NSString *)accountId {
+    NSString *plistPath = [[NSBundle bundleForClass:[self class]] pathForResource:@"testAccounts" ofType:@"plist"];
+    NSDictionary *accounts = [NSDictionary dictionaryWithContentsOfFile:plistPath];
+    return [accounts objectForKey:accountId];
 }
 
 - (void)assertValidRemoteMeeting:(id)remoteMeeting {

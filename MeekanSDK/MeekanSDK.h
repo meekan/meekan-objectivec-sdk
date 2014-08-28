@@ -18,7 +18,7 @@
 
 - (id)initWithApiKey:(NSString *)apiKey;
 
-- (void)connectWithExchange:(NSString *)username withPassword:(NSString *)password withEmail:(NSString *)email withServerUrl:(NSString *)url andDomain:(NSString *)domain onSuccess:(ConnectedUserSuccess)success onError:(MeekanResponseError)error;
+- (void)connectWithExchangeUser:(NSString *)username withPassword:(NSString *)password withEmail:(NSString *)email withServerUrl:(NSString *)url andDomain:(NSString *)domain onSuccess:(ConnectedUserSuccess)success onError:(MeekanResponseError)error;
 
 - (void)connectedUserDetailsWithSuccess:(ConnectedUserSuccess)success onError:(MeekanResponseError)error;
 

@@ -44,25 +44,42 @@ static MeekanSDK *sharedInstance = nil;
         self.manager.requestSerializer = [AFHTTPRequestSerializer serializer];
         [self.manager.requestSerializer setValue:[NSString stringWithFormat:@"Meekan %@", self.apiKey] forHTTPHeaderField:@"Authorization"];
         self.manager.responseSerializer = [AFJSONResponseSerializer serializer];
-
     }
     
     return self;
 }
 
-- (void)connectWithExchange:(NSString *)username withPassword:(NSString *)password withEmail:(NSString *)email withServerUrl:(NSString *)url andDomain:(NSString *)domain onSuccess:(ConnectedUserSuccess)successCallback onError:(MeekanResponseError)errorCallback {
+- (void)connectWithExchangeUser:(NSString *)username withPassword:(NSString *)password withEmail:(NSString *)email withServerUrl:(NSString *)url andDomain:(NSString *)domain onSuccess:(ConnectedUserSuccess)successCallback onError:(MeekanResponseError)errorCallback {
     if ([self isAllNotEmpty:@[username, password, email, url, domain]]) {
-        NSDictionary *params = @{};
-        [self.manager GET:@"/social_login/exchange/complete" parameters:@{} success:^(NSURLSessionDataTask *task, id responseObject) {
-            <#code#>
-        } failure:^(NSURLSessionDataTask *task, NSError *error) {
-            errorCallback(error);
-        }];
+        NSError *argumentsError;
+        NSData *jsonArgs = [self jsonOf:@{@"username":username, @"password":password, @"email": email,
+                                          @"url":url, @"domain":domain} error:&argumentsError];
+        if (!argumentsError && jsonArgs) {
+            NSString *json = [[NSString alloc]initWithData:jsonArgs encoding:NSUTF8StringEncoding];
+            NSDictionary *params = @{@"state": json};
+            [self.manager GET:@"/social_login/exchange/complete" parameters:params success:^(NSURLSessionDataTask *task, id responseObject) {
+                NSError *errorInRespone = [self.apiAdapter checkIfError:responseObject];
+                if (!errorInRespone) {
+                    [self extractConnectedUser:responseObject error:&errorInRespone errorCallback:errorCallback successCallback:successCallback];
+                } else {
+                    errorCallback(errorInRespone);
+                }
+            } failure:^(NSURLSessionDataTask *task, NSError *error) {
+                errorCallback(error);
+            }];
+        } else {
+            errorCallback(argumentsError);
+        }
     } else {
         NSError *err = [NSError errorWithDomain:MEEKAN_CLIENT_ERROR_DOMAIN code:INVALID_PARAMETERS
                                        userInfo:@{NSLocalizedDescriptionKey: [NSString stringWithFormat:@"Please review required parameters for Exchange Connection %@",self.apiAdapter]}];
         errorCallback(err);
     }
+}
+
+- (NSData *)jsonOf:(NSDictionary *)params error:(NSError *__autoreleasing *)err {
+    NSData *data = [NSJSONSerialization dataWithJSONObject:params options:0 error:err];
+    return data;
 }
 
 -(BOOL)isAllNotEmpty:(NSArray *)params {
@@ -161,20 +178,23 @@ static MeekanSDK *sharedInstance = nil;
     }
 }
 
+- (void)extractConnectedUser:(id)responseObject error:(NSError **)errorInRespone_p errorCallback:(MeekanResponseError)errorCallback successCallback:(ConnectedUserSuccess)successCallback {
+    ConnectedUser *user = [self.apiAdapter parseCurrentUserDetails:responseObject andError:&(*errorInRespone_p)];
+    if (!(*errorInRespone_p)) {
+        successCallback(user);
+    } else {
+        errorCallback(*errorInRespone_p);
+    }
+}
+
 - (void)connectedUserDetailsWithSuccess:(ConnectedUserSuccess)successCallback onError:(MeekanResponseError)errorCallback {
     if ([self.apiAdapter respondsToSelector:@selector(currentUserDetails)]) {
         HTTPEndpoint *endpoint = [self.apiAdapter currentUserDetails];
         if (endpoint) {
-            NSLog(@"%@", [self.manager.session.configuration.HTTPCookieStorage cookiesForURL:[NSURL URLWithString:@"http://localhost:8080"]]);
             [self.manager GET:endpoint.path parameters:endpoint.parameters success:^(NSURLSessionDataTask *task, id responseObject) {
                 NSError *errorInRespone = [self.apiAdapter checkIfError:responseObject];
                 if (!errorInRespone) {
-                    ConnectedUser *user = [self.apiAdapter parseCurrentUserDetails:responseObject andError:&errorInRespone];
-                    if (!errorInRespone) {
-                        successCallback(user);
-                    } else {
-                        errorCallback(errorInRespone);
-                    }
+                    [self extractConnectedUser:responseObject error:&errorInRespone errorCallback:errorCallback successCallback:successCallback];
                 } else {
                     errorCallback(errorInRespone);
                 }
