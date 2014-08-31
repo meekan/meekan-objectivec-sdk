@@ -15,6 +15,7 @@ static BOOL hasEntered;
 
 @interface MeekanSDKTests : XCTestCase
 @property (nonatomic, strong) MeekanSDK *sdk;
+@property (nonatomic, strong) NSString *connectedAccount;
 @end
 
 @implementation MeekanSDKTests
@@ -37,6 +38,7 @@ static BOOL hasEntered;
     [[NSHTTPCookieStorage sharedHTTPCookieStorage] setCookie:session];
     [[NSHTTPCookieStorage sharedHTTPCookieStorage] setCookie:sessionName];
     self.sdk =[MeekanSDK sharedInstanceWithApiKey:@"AnyKey"];
+    self.connectedAccount = @"4785074604081152";
 }
 
 - (void)tearDown
@@ -49,7 +51,7 @@ static BOOL hasEntered;
 {
 
     MeetingDetails *details = [[MeetingDetails alloc]init];
-    details.accountId = @"4785074604081152";
+    details.accountId = self.connectedAccount;
     details.title = @"Test";
     details.durationInMinutes = 10;
     
@@ -220,6 +222,42 @@ static BOOL hasEntered;
         }];
     }];
     
+    
+    [self maximumDelayForAsyncTest:60];
+}
+
+-(void)testSuggestedSlotsEmptyFrames {
+    [self startAsyncTest];
+
+    SlotSuggestionsRequest *request = [[SlotSuggestionsRequest alloc]init];
+    request.organizerAccountId = self.connectedAccount;
+    request.duration = 10; // Minutes
+    [self.sdk suggestedSlots:request onSuccess:^(NSArray *slotSuggestions) {
+        XCTAssertEqual([slotSuggestions count], 0, @"Without frames, expected zero suggestions, received %ld: %@", [slotSuggestions count], slotSuggestions);
+        [self endAsyncTest];
+    } onError:^(NSError *err) {
+        XCTFail(@"Unexpected error: %@", err);
+        [self endAsyncTest];
+    }];
+    
+    [self maximumDelayForAsyncTest:60];
+}
+
+-(void)testSuggestedSlotsFrameWithSingleSpot {
+    [self startAsyncTest];
+    
+    SlotSuggestionsRequest *request = [[SlotSuggestionsRequest alloc]init];
+    request.organizerAccountId = self.connectedAccount;
+    request.duration = 10; // Minutes
+    NSDate *now = [NSDate date];
+    request.timeFrameRanges = @[ @[now, [now dateByAddingTimeInterval:10 * 60]] ];
+    [self.sdk suggestedSlots:request onSuccess:^(NSArray *slotSuggestions) {
+        XCTAssertEqual([slotSuggestions count], 1, @"With single tight frame, expected one suggestion, received %ld: %@", [slotSuggestions count], slotSuggestions);
+        [self endAsyncTest];
+    } onError:^(NSError *err) {
+        XCTFail(@"Unexpected error: %@", err);
+        [self endAsyncTest];
+    }];
     
     [self maximumDelayForAsyncTest:60];
 }

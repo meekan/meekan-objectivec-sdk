@@ -8,6 +8,7 @@
 
 #import "MKNApiAdapter.h"
 #import "MKNParameters.h"
+#import "NSArray+TimeRanges.h"
 
 @implementation HTTPEndpoint
 @end
@@ -30,8 +31,8 @@
         }
     } else {
         err = [NSError errorWithDomain:MEEKAN_CLIENT_ERROR_DOMAIN code:MISSING_RESPONSE_BODY
-                                       userInfo:@{NSLocalizedDescriptionKey:
-                                                      NSLocalizedString(@"Expected Response body, received empty", nil)}];
+                              userInfo:@{NSLocalizedDescriptionKey:
+                                             NSLocalizedString(@"Expected Response body, received empty", nil)}];
     }
     return err;
 }
@@ -44,12 +45,10 @@
     NSMutableDictionary *params = [NSMutableDictionary dictionary];
     HTTPEndpoint *endpoint = [[HTTPEndpoint alloc]init];
     
-    if ([details.accountId length] == 0 && details.durationInMinutes == 0) {
+    if ([details.accountId length] == 0 || details.durationInMinutes == 0) {
         return nil;
     }
-    //
-    //    @property (nonatomic, strong) MeetingParticipants *participants;
-    //
+    
     [self setValue:details.accountId toKey:@"account_id" inParameters:params];
     [self setValue:details.title toKey:@"meeting_name" inParameters:params];
     [self setValue:details.calendarInAccount toKey:@"calendar_id" inParameters:params];
@@ -133,6 +132,32 @@
     HTTPEndpoint *endpoint = [[HTTPEndpoint alloc]init];
     endpoint.path = @"/rest/auth";
     endpoint.parameters = @{};
+    return endpoint;
+}
+
+-(HTTPEndpoint *)suggestedSlotsUsing:(SlotSuggestionsRequest *)requestDetails {
+    HTTPEndpoint *endpoint = [[HTTPEndpoint alloc]init];
+    endpoint.path = @"/rest/slots";
+    if ([requestDetails.organizerAccountId length] == 0) {
+        return nil;
+    }
+    NSMutableDictionary *params = [NSMutableDictionary dictionary];
+    NSMutableArray *ranges = [NSMutableArray array];
+    [requestDetails.timeFrameRanges enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        if ([obj respondsToSelector:@selector(isValidTimeRange)]) {
+            if ([obj isValidTimeRange]) {
+                [ranges addObject:[obj toTimeRange]];
+            }
+        }
+    }];
+    params[@"ranges"] = ranges;
+    params[@"page"] = requestDetails.page ? @(requestDetails.page) : @(0);
+    params[@"organizer_account_id"] = requestDetails.organizerAccountId;
+    params[@"duration"] = @(requestDetails.duration);
+    if ([requestDetails.inviteesIds count]) {
+        params[@"invitees"] = requestDetails.inviteesIds;
+    }
+    endpoint.parameters = params;
     return endpoint;
 }
 
@@ -293,6 +318,23 @@
     return user;
 }
 
+-(NSArray *)parseSuggestedSlotList:(id)serverResponse andError:(NSError *__autoreleasing *)error {
+    NSArray *data = [self getDataArrayFromResponse:serverResponse optional:YES orError:error];
+    NSMutableArray *suggestions = [[NSMutableArray alloc]init];
+    if (!*error && data) {
+        for (NSDictionary *suggestionFromServer in data) {
+            SlotSuggestion *suggestion = [[SlotSuggestion alloc]init];
+            NSTimeInterval start = [[suggestionFromServer objectForKey:@"start"] doubleValue];
+            suggestion.start = [NSDate dateWithTimeIntervalSince1970:start];
+            suggestion.busyIds = [NSSet setWithArray:[suggestionFromServer objectForKey:@"not_available"]];
+            suggestion.rank = [[suggestionFromServer objectForKey:@"rank"] integerValue];
+            [suggestions addObject:suggestion];
+        }
+    }
+    
+    return suggestions;
+}
+
 
 -(NSDictionary *)getDataFromResponse:(id)serverResponse orError:(NSError *__autoreleasing *)error {
     if ([serverResponse isKindOfClass:[NSDictionary class]]) {
@@ -305,6 +347,26 @@
         }
     } else {
         [self insertErrorCode:UNEXPECTED_RESPONSE_FORMAT andMessage:@"Expected response to be a dictionary" into:error];
+    }
+    
+    return nil;
+}
+
+-(NSArray *)getDataArrayFromResponse:(id)serverResponse  optional:(BOOL)isOptional orError:(NSError *__autoreleasing *)error{
+    if ([serverResponse isKindOfClass:[NSDictionary class]]) {
+        NSDictionary *base = serverResponse;
+        if ([base objectForKey:@"data"]) {
+            NSArray *data = [base objectForKey:@"data"];
+            return data;
+        } else {
+            if (isOptional) {
+                return @[];
+            } else {
+                [self insertErrorCode:UNEXPECTED_RESPONSE_FORMAT andMessage:@"Expected response to include 'data'" into:error];
+            }
+        }
+    } else {
+        [self insertErrorCode:UNEXPECTED_RESPONSE_FORMAT andMessage:@"Expected response to be a array" into:error];
     }
     
     return nil;

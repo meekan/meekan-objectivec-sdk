@@ -215,6 +215,37 @@ static MeekanSDK *sharedInstance = nil;
     }
 }
 
+-(void)suggestedSlots:(SlotSuggestionsRequest *)request onSuccess:(SlotListSuccess)successCallback onError:(MeekanResponseError)errorCallback {
+    if ([self.apiAdapter respondsToSelector:@selector(suggestedSlotsUsing:)]) {
+        HTTPEndpoint *endpoint = [self.apiAdapter suggestedSlotsUsing:request];
+        if (endpoint) {
+            [self.manager GET:endpoint.path parameters:endpoint.parameters success:^(NSURLSessionDataTask *task, id responseObject) {
+                NSError *errorInRespone = [self.apiAdapter checkIfError:responseObject];
+                if (!errorInRespone) {
+                    NSArray *list = [self.apiAdapter parseSuggestedSlotList:responseObject andError:&errorInRespone];
+                    if (!errorInRespone) {
+                        successCallback(list);
+                    } else {
+                        errorCallback(errorInRespone);
+                    }
+                } else {
+                    errorCallback(errorInRespone);
+                }
+            } failure:^(NSURLSessionDataTask *task, NSError *error) {
+                errorCallback(error);
+            }];
+        } else {
+            NSError *err = [NSError errorWithDomain:MEEKAN_CLIENT_ERROR_DOMAIN code:INVALID_PARAMETERS
+                                           userInfo:@{NSLocalizedDescriptionKey: [NSString stringWithFormat:@"Please review required parameters for Suggested Slots %@",self.apiAdapter]}];
+            errorCallback(err);
+        }
+    } else {
+        NSError *err = [NSError errorWithDomain:MEEKAN_CLIENT_ERROR_DOMAIN code:NOT_IMPLEMENTED_IN_THIS_SDK
+                                       userInfo:@{NSLocalizedDescriptionKey: [NSString stringWithFormat:@"Suggested Slots is not supported in adapter %@",self.apiAdapter]}];
+        errorCallback(err);
+    }
+}
+
 - (void)extractConnectedUser:(id)responseObject error:(NSError **)errorInRespone_p errorCallback:(MeekanResponseError)errorCallback successCallback:(ConnectedUserSuccess)successCallback {
     ConnectedUser *user = [self.apiAdapter parseCurrentUserDetails:responseObject andError:&(*errorInRespone_p)];
     if (!(*errorInRespone_p)) {

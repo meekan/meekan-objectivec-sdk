@@ -47,3 +47,12 @@
 @implementation MeetingFromServer
 
 @end
+
+
+@implementation SlotSuggestionsRequest
+
+@end
+
+@implementation SlotSuggestion
+
+@end

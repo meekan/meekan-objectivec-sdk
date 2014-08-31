@@ -27,4 +27,7 @@
 - (void)updateMeeting:(MeetingDetails *)meeting onSuccess:(MeetingResponseSuccess)success onError:(MeekanResponseError)error;
 - (void)deleteMeeting:(NSString *)meetingId onSuccess:(MeetingDeleteSuccess)success onError:(MeekanResponseError)error;
 - (void)listMeetingsForAccountSince:(NSDate *)timestamp onSuccess:(MeetingListSuccess)success onError:(MeekanResponseError)error;
+
+- (void)suggestedSlots:(SlotSuggestionsRequest *)request onSuccess:(SlotListSuccess)success onError:(MeekanResponseError)error;
+
 @end

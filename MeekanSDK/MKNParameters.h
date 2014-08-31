@@ -30,6 +30,7 @@ typedef void (^MeetingResponseSuccess)(MeetingServerResponse *details);
 typedef void (^MeetingDeleteSuccess)(NSString *deletedMeekanId);
 typedef void (^ConnectedUserSuccess)(ConnectedUser *user);
 typedef void (^MeetingListSuccess)(MeetingList *meetingList);
+typedef void (^SlotListSuccess)(NSArray *slotSuggestions);
 
 
 typedef NS_ENUM(NSUInteger, RepeatInterval) {
@@ -147,4 +148,19 @@ typedef NS_ENUM(NSUInteger, PollVote) {
 @property (nonatomic, strong) NSString *accountId;
 @property (nonatomic, strong) NSString *email;
 @property (nonatomic, strong) NSString *phone;
+@end
+
+
+@interface SlotSuggestionsRequest : NSObject
+@property (nonatomic, strong) NSSet *inviteesIds;
+@property (nonatomic) NSUInteger duration;
+@property (nonatomic) NSString *organizerAccountId;
+@property (nonatomic) NSInteger page;
+@property (nonatomic) NSArray *timeFrameRanges;
+@end
+
+@interface SlotSuggestion : NSObject
+@property (nonatomic, strong) NSDate *start;
+@property (nonatomic, strong) NSSet *busyIds;
+@property (nonatomic) NSInteger rank;
 @end
