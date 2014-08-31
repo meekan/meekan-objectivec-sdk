@@ -49,6 +49,12 @@ static MeekanSDK *sharedInstance = nil;
     return self;
 }
 
+- (MKNGoogleLoginViewController *)connectWithGoogleWithCompletionHandler:(MKNGoogleLoginViewControllerCompletionHandler)completion {    MKNGoogleLoginViewController *controller = [[MKNGoogleLoginViewController alloc]initWithNibName:@"MKNGoogleLoginViewController" bundle:[NSBundle mainBundle]];
+    controller.adapter = self.apiAdapter;
+    controller.completion = completion;
+    return controller;
+}
+
 - (void)connectWithExchangeUser:(NSString *)username withPassword:(NSString *)password withEmail:(NSString *)email withServerUrl:(NSString *)url andDomain:(NSString *)domain onSuccess:(ConnectedUserSuccess)successCallback onError:(MeekanResponseError)errorCallback {
     if ([self isAllNotEmpty:@[username, password, email, url, domain]]) {
         NSError *argumentsError;

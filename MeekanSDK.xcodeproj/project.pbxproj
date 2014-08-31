@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		73E60417EABC471BB87B43D1 /* libPods-MeekanSDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 48BDCDF518694913897EA13F /* libPods-MeekanSDK.a */; };
+		D745820E19B349E5001953D8 /* MKNGoogleLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D745820C19B349E5001953D8 /* MKNGoogleLoginViewController.m */; };
 		D7B2814919AC6CD100AA4E95 /* MeekanSDK.m in Sources */ = {isa = PBXBuildFile; fileRef = D7B2814419AC6CD100AA4E95 /* MeekanSDK.m */; };
 		D7B2814A19AC6CD100AA4E95 /* MKNApiAdapter.m in Sources */ = {isa = PBXBuildFile; fileRef = D7B2814619AC6CD100AA4E95 /* MKNApiAdapter.m */; };
 		D7B2814B19AC6CD100AA4E95 /* MKNParameters.m in Sources */ = {isa = PBXBuildFile; fileRef = D7B2814819AC6CD100AA4E95 /* MKNParameters.m */; };
@@ -49,6 +50,9 @@
 /* Begin PBXFileReference section */
 		2FD3154E5E2B44E49188D387 /* Pods-MeekanSDK.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MeekanSDK.xcconfig"; path = "Pods/Pods-MeekanSDK.xcconfig"; sourceTree = "<group>"; };
 		48BDCDF518694913897EA13F /* libPods-MeekanSDK.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-MeekanSDK.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		D745820B19B349E5001953D8 /* MKNGoogleLoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MKNGoogleLoginViewController.h; sourceTree = "<group>"; };
+		D745820C19B349E5001953D8 /* MKNGoogleLoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MKNGoogleLoginViewController.m; sourceTree = "<group>"; };
+		D745820D19B349E5001953D8 /* MKNGoogleLoginViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MKNGoogleLoginViewController.xib; sourceTree = "<group>"; };
 		D7B2814319AC6CD100AA4E95 /* MeekanSDK.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MeekanSDK.h; sourceTree = "<group>"; };
 		D7B2814419AC6CD100AA4E95 /* MeekanSDK.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MeekanSDK.m; sourceTree = "<group>"; };
 		D7B2814519AC6CD100AA4E95 /* MKNApiAdapter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MKNApiAdapter.h; sourceTree = "<group>"; };
@@ -97,6 +101,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		D79DAEBA19B1B04F0015495D /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				D745820B19B349E5001953D8 /* MKNGoogleLoginViewController.h */,
+				D745820C19B349E5001953D8 /* MKNGoogleLoginViewController.m */,
+				D745820D19B349E5001953D8 /* MKNGoogleLoginViewController.xib */,
+			);
+			name = Controllers;
+			sourceTree = "<group>";
+		};
 		D7F23B5919AC6A9600F3EE7B = {
 			isa = PBXGroup;
 			children = (
@@ -134,6 +148,7 @@
 		D7F23B6719AC6A9600F3EE7B /* MeekanSDK */ = {
 			isa = PBXGroup;
 			children = (
+				D79DAEBA19B1B04F0015495D /* Controllers */,
 				D7B2814319AC6CD100AA4E95 /* MeekanSDK.h */,
 				D7B2814419AC6CD100AA4E95 /* MeekanSDK.m */,
 				D7B2814519AC6CD100AA4E95 /* MKNApiAdapter.h */,
@@ -289,6 +304,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D745820E19B349E5001953D8 /* MKNGoogleLoginViewController.m in Sources */,
 				D7B2814919AC6CD100AA4E95 /* MeekanSDK.m in Sources */,
 				D7B2814A19AC6CD100AA4E95 /* MKNApiAdapter.m in Sources */,
 				D7B2814B19AC6CD100AA4E95 /* MKNParameters.m in Sources */,
