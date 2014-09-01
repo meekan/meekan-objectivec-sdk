@@ -50,7 +50,8 @@ static MeekanSDK *sharedInstance = nil;
     return self;
 }
 
-- (MKNGoogleLoginViewController *)connectWithGoogleWithCompletionHandler:(MKNGoogleLoginViewControllerCompletionHandler)completion {    MKNGoogleLoginViewController *controller = [[MKNGoogleLoginViewController alloc]initWithNibName:@"MKNGoogleLoginViewController" bundle:[NSBundle mainBundle]];
+- (MKNGoogleLoginViewController *)connectWithGoogleWithCompletionHandler:(MKNGoogleLoginViewControllerCompletionHandler)completion {
+    MKNGoogleLoginViewController *controller = [[MKNGoogleLoginViewController alloc]initWithNibName:@"MKNGoogleLoginViewController" bundle:[NSBundle mainBundle]];
     controller.adapter = self.apiAdapter;
     controller.completion = completion;
     return controller;
