@@ -6,7 +6,7 @@
 //  Copyright (c) 2014 Meekan. All rights reserved.
 //
 
-#import "NSArray+TimeRanges.h"
+#import "NSObject+TimeRanges.h"
 
 @implementation NSArray (TimeRanges)
 

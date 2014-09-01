@@ -253,6 +253,31 @@ static BOOL hasEntered;
     request.timeFrameRanges = @[ @[now, [now dateByAddingTimeInterval:10 * 60]] ];
     [self.sdk suggestedSlots:request onSuccess:^(NSArray *slotSuggestions) {
         XCTAssertEqual([slotSuggestions count], 1, @"With single tight frame, expected one suggestion, received %ld: %@", [slotSuggestions count], slotSuggestions);
+        SlotSuggestion *suggestion = slotSuggestions[0];
+        XCTAssertEqual(suggestion.start, now, @"Only possible time should've been %@, but received %@", now, suggestion.start);
+        [self endAsyncTest];
+    } onError:^(NSError *err) {
+        XCTFail(@"Unexpected error: %@", err);
+        [self endAsyncTest];
+    }];
+    
+    [self maximumDelayForAsyncTest:60];
+}
+
+-(void)testSuggestedSlotsFrameWithMultipleFrames {
+    [self startAsyncTest];
+    
+    SlotSuggestionsRequest *request = [[SlotSuggestionsRequest alloc]init];
+    request.organizerAccountId = self.connectedAccount;
+    request.duration = 10; // Minutes
+    NSDate *now = [NSDate dateWithTimeIntervalSince1970:trunc([[NSDate date] timeIntervalSince1970])];
+    request.timeFrameRanges = @[ @[now, [now dateByAddingTimeInterval:10 * 60]],
+                                 @[[now dateByAddingTimeInterval:20*60], [now dateByAddingTimeInterval:30*60]]];
+    NSSet *framesStart = [NSSet setWithObjects:now, [now dateByAddingTimeInterval:20*60],nil];
+    [self.sdk suggestedSlots:request onSuccess:^(NSArray *slotSuggestions) {
+        NSSet *times = [NSSet setWithArray:[slotSuggestions valueForKey:@"start"]];
+        XCTAssertEqual([times count], 2, @"With two tight frames, expected two suggestions, received %ld: %@", [times count], slotSuggestions);
+        XCTAssertTrue([times isEqualToSet:framesStart], @"Only possible time should've been %@, but received %@", times, framesStart);
         [self endAsyncTest];
     } onError:^(NSError *err) {
         XCTFail(@"Unexpected error: %@", err);

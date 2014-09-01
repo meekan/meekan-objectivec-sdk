@@ -8,7 +8,7 @@
 
 #import "MKNApiAdapter.h"
 #import "MKNParameters.h"
-#import "NSArray+TimeRanges.h"
+#import "NSObject+TimeRanges.h"
 
 @implementation HTTPEndpoint
 @end
@@ -144,13 +144,14 @@
     NSMutableDictionary *params = [NSMutableDictionary dictionary];
     NSMutableArray *ranges = [NSMutableArray array];
     [requestDetails.timeFrameRanges enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-        if ([obj respondsToSelector:@selector(isValidTimeRange)]) {
-            if ([obj isValidTimeRange]) {
-                [ranges addObject:[obj toTimeRange]];
+        if ([obj conformsToProtocol:@protocol(TimeRange)]) {
+            id<TimeRange> range = obj;
+            if ([range isValidTimeRange]) {
+                [ranges addObject:[range toTimeRange]];
             }
         }
     }];
-    params[@"ranges"] = ranges;
+    params[@"frames"] = ranges;
     params[@"page"] = requestDetails.page ? @(requestDetails.page) : @(0);
     params[@"organizer_account_id"] = requestDetails.organizerAccountId;
     params[@"duration"] = @(requestDetails.duration);

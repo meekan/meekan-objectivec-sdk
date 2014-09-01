@@ -9,7 +9,7 @@
 /* Begin PBXBuildFile section */
 		73E60417EABC471BB87B43D1 /* libPods-MeekanSDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 48BDCDF518694913897EA13F /* libPods-MeekanSDK.a */; };
 		D745820E19B349E5001953D8 /* MKNGoogleLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D745820C19B349E5001953D8 /* MKNGoogleLoginViewController.m */; };
-		D745821619B36431001953D8 /* NSArray+TimeRanges.m in Sources */ = {isa = PBXBuildFile; fileRef = D745821519B36431001953D8 /* NSArray+TimeRanges.m */; };
+		D745821619B36431001953D8 /* NSObject+TimeRanges.m in Sources */ = {isa = PBXBuildFile; fileRef = D745821519B36431001953D8 /* NSObject+TimeRanges.m */; };
 		D7B2814919AC6CD100AA4E95 /* MeekanSDK.m in Sources */ = {isa = PBXBuildFile; fileRef = D7B2814419AC6CD100AA4E95 /* MeekanSDK.m */; };
 		D7B2814A19AC6CD100AA4E95 /* MKNApiAdapter.m in Sources */ = {isa = PBXBuildFile; fileRef = D7B2814619AC6CD100AA4E95 /* MKNApiAdapter.m */; };
 		D7B2814B19AC6CD100AA4E95 /* MKNParameters.m in Sources */ = {isa = PBXBuildFile; fileRef = D7B2814819AC6CD100AA4E95 /* MKNParameters.m */; };
@@ -54,8 +54,8 @@
 		D745820B19B349E5001953D8 /* MKNGoogleLoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MKNGoogleLoginViewController.h; sourceTree = "<group>"; };
 		D745820C19B349E5001953D8 /* MKNGoogleLoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MKNGoogleLoginViewController.m; sourceTree = "<group>"; };
 		D745820D19B349E5001953D8 /* MKNGoogleLoginViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MKNGoogleLoginViewController.xib; sourceTree = "<group>"; };
-		D745821419B36431001953D8 /* NSArray+TimeRanges.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSArray+TimeRanges.h"; sourceTree = "<group>"; };
-		D745821519B36431001953D8 /* NSArray+TimeRanges.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSArray+TimeRanges.m"; sourceTree = "<group>"; };
+		D745821419B36431001953D8 /* NSObject+TimeRanges.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+TimeRanges.h"; sourceTree = "<group>"; };
+		D745821519B36431001953D8 /* NSObject+TimeRanges.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+TimeRanges.m"; sourceTree = "<group>"; };
 		D7B2814319AC6CD100AA4E95 /* MeekanSDK.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MeekanSDK.h; sourceTree = "<group>"; };
 		D7B2814419AC6CD100AA4E95 /* MeekanSDK.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MeekanSDK.m; sourceTree = "<group>"; };
 		D7B2814519AC6CD100AA4E95 /* MKNApiAdapter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MKNApiAdapter.h; sourceTree = "<group>"; };
@@ -158,8 +158,8 @@
 				D7B2814619AC6CD100AA4E95 /* MKNApiAdapter.m */,
 				D7B2814719AC6CD100AA4E95 /* MKNParameters.h */,
 				D7B2814819AC6CD100AA4E95 /* MKNParameters.m */,
-				D745821419B36431001953D8 /* NSArray+TimeRanges.h */,
-				D745821519B36431001953D8 /* NSArray+TimeRanges.m */,
+				D745821419B36431001953D8 /* NSObject+TimeRanges.h */,
+				D745821519B36431001953D8 /* NSObject+TimeRanges.m */,
 				D7F23B6819AC6A9600F3EE7B /* Supporting Files */,
 			);
 			path = MeekanSDK;
@@ -310,7 +310,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D745820E19B349E5001953D8 /* MKNGoogleLoginViewController.m in Sources */,
-				D745821619B36431001953D8 /* NSArray+TimeRanges.m in Sources */,
+				D745821619B36431001953D8 /* NSObject+TimeRanges.m in Sources */,
 				D7B2814919AC6CD100AA4E95 /* MeekanSDK.m in Sources */,
 				D7B2814A19AC6CD100AA4E95 /* MKNApiAdapter.m in Sources */,
 				D7B2814B19AC6CD100AA4E95 /* MKNParameters.m in Sources */,
@@ -380,6 +380,10 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = (
+					"$(OTHER_LDFLAGS)",
+					"-ObjC",
+				);
 				SDKROOT = iphoneos;
 			};
 			name = Debug;
@@ -410,6 +414,10 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				OTHER_LDFLAGS = (
+					"$(OTHER_LDFLAGS)",
+					"-ObjC",
+				);
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
 			};
@@ -422,7 +430,10 @@
 				DSTROOT = /tmp/MeekanSDK.dst;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "MeekanSDK/MeekanSDK-Prefix.pch";
-				OTHER_LDFLAGS = "-ObjC";
+				OTHER_LDFLAGS = (
+					"$(OTHER_LDFLAGS)",
+					"-ObjC",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 			};
@@ -435,7 +446,10 @@
 				DSTROOT = /tmp/MeekanSDK.dst;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "MeekanSDK/MeekanSDK-Prefix.pch";
-				OTHER_LDFLAGS = "-ObjC";
+				OTHER_LDFLAGS = (
+					"$(OTHER_LDFLAGS)",
+					"-ObjC",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 			};
