@@ -15,7 +15,9 @@
 @class ConnectedUser;
 @class MeetingList;
 
-static NSString *MEEKAN_CLIENT_ERROR_DOMAIN = @"MeekanSDK";
+extern NSString *const kMKNClientErrorDomain;
+extern NSString *const kMKNTimeRangeStartKey;
+extern NSString *const kMKNTimeRangeEndKey;
 
 NS_ENUM(NSInteger, SDKErrorCodes) {
     NOT_IMPLEMENTED_IN_THIS_SDK = -1,
@@ -31,6 +33,7 @@ typedef void (^MeetingDeleteSuccess)(NSString *deletedMeekanId);
 typedef void (^ConnectedUserSuccess)(ConnectedUser *user);
 typedef void (^MeetingListSuccess)(MeetingList *meetingList);
 typedef void (^SlotListSuccess)(NSArray *slotSuggestions);
+typedef void (^FreeBusySuccess)(NSArray *freeBusyRanges);
 
 
 typedef NS_ENUM(NSUInteger, RepeatInterval) {

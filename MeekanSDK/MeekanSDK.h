@@ -30,4 +30,5 @@
 
 - (void)suggestedSlots:(SlotSuggestionsRequest *)request onSuccess:(SlotListSuccess)success onError:(MeekanResponseError)error;
 
+- (void)freeBusyFor:(NSString *)account fromDate:(NSDate *)startDate untilDate:(NSDate *)endDate onSuccess:(FreeBusySuccess)success onError:(MeekanResponseError)error;
 @end

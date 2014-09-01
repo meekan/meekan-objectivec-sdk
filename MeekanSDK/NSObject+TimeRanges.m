@@ -22,31 +22,31 @@
 
 @end
 
-//@implementation NSDictionary (TimeRanges)
-//
-//-(BOOL)isValidTimeRange {
-//    return
-//        [self objectForKey:@"start"] && [self[@"start"] isKindOfClass:[NSDate class]] &&
-//        [self objectForKey:@"end"] && [self[@"end"] isKindOfClass:[NSDate class]];
-//}
-//
-//-(NSString *)toTimeRange {
-//    return [NSString stringWithFormat:@"%d:%d", (int)[self[@"start"] timeIntervalSince1970], (int)[self[@"end"] timeIntervalSince1970]];
-//}
-//
-//@end
-//
-//@implementation NSString (TimeRanges)
-//
-//-(BOOL)isValidTimeRange {
-//    NSArray *parts = ([self componentsSeparatedByString:@":"]);
-//    return [parts count] == 2 &&
-//        [parts[0] integerValue] &&
-//        [parts[1] integerValue];
-//}
-//
-//-(NSString *)toTimeRange {
-//    return self;
-//}
-//
-//@end
+@implementation NSDictionary (TimeRanges)
+
+-(BOOL)isValidTimeRange {
+    return
+        [self objectForKey:@"start"] && [self[@"start"] isKindOfClass:[NSDate class]] &&
+        [self objectForKey:@"end"] && [self[@"end"] isKindOfClass:[NSDate class]];
+}
+
+-(NSString *)toTimeRange {
+    return [NSString stringWithFormat:@"%d:%d", (int)[self[@"start"] timeIntervalSince1970], (int)[self[@"end"] timeIntervalSince1970]];
+}
+
+@end
+
+@implementation NSString (TimeRanges)
+
+-(BOOL)isValidTimeRange {
+    NSArray *parts = ([self componentsSeparatedByString:@":"]);
+    return [parts count] == 2 &&
+        [parts[0] integerValue] &&
+        [parts[1] integerValue];
+}
+
+-(NSString *)toTimeRange {
+    return self;
+}
+
+@end

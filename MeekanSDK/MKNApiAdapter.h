@@ -25,6 +25,7 @@
 - (HTTPEndpoint *)deleteMeetingWithId:(NSString *)meetingId;
 - (HTTPEndpoint *)listMeetingsSince:(NSDate *)timestamp;
 - (HTTPEndpoint *)suggestedSlotsUsing:(SlotSuggestionsRequest *)requestDetails;
+- (HTTPEndpoint *)freeBusyFor:(NSString *)accountId from:(NSDate *)start until:(NSDate *)end;
 /**
  Parses the result into an object. If there is an error, returns nil and in the NSError
  */
@@ -33,6 +34,7 @@
 - (MeetingList *)parseMeetingList:(id)serverResponse andError:(NSError * __autoreleasing *)error;
 - (ConnectedUser *)parseCurrentUserDetails:(id)serverResponse andError:(NSError * __autoreleasing *)error;
 - (NSArray *)parseSuggestedSlotList:(id)serverResponse andError:(NSError * __autoreleasing *)error;
+- (NSArray *)parseFreeBusy:(id)serverResponse andError:(NSError * __autoreleasing *)error;
 @end
 
 @interface ApiV1Adapter : NSObject <ApiAdapter>

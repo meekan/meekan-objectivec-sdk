@@ -8,6 +8,10 @@
 
 #import "MKNParameters.h"
 
+NSString *const kMKNClientErrorDomain = @"MeekanSDK";
+NSString *const kMKNTimeRangeStartKey = @"start";
+NSString *const kMKNTimeRangeEndKey = @"end";
+
 @implementation MeetingDetails
 
 @end

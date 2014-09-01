@@ -10,6 +10,9 @@
 #import "MKNParameters.h"
 #import "NSObject+TimeRanges.h"
 
+static const NSTimeInterval THREE_MONTHS = 3 * 30 * 24 * 60 * 60;
+static const NSTimeInterval MAX_RANGE_FOR_FREEBUSY = THREE_MONTHS;
+
 @implementation HTTPEndpoint
 @end
 
@@ -22,15 +25,15 @@
             NSInteger errorCode = [[baseResult objectForKey:@"error_code"] integerValue];
             if (errorCode != 0) {
                 NSString *errorMessage = [baseResult objectForKey:@"error_message"];
-                err = [NSError errorWithDomain:MEEKAN_CLIENT_ERROR_DOMAIN code:errorCode userInfo:@{NSLocalizedDescriptionKey: errorMessage ? errorMessage : @"Server Error"}];
+                err = [NSError errorWithDomain:kMKNClientErrorDomain code:errorCode userInfo:@{NSLocalizedDescriptionKey: errorMessage ? errorMessage : @"Server Error"}];
             }
         } else {
-            err = [NSError errorWithDomain:MEEKAN_CLIENT_ERROR_DOMAIN code:UNEXPECTED_RESPONSE_FORMAT
+            err = [NSError errorWithDomain:kMKNClientErrorDomain code:UNEXPECTED_RESPONSE_FORMAT
                                   userInfo:@{NSLocalizedDescriptionKey:
                                                  NSLocalizedString(@"Expected Body to be a dictionary", nil)}];
         }
     } else {
-        err = [NSError errorWithDomain:MEEKAN_CLIENT_ERROR_DOMAIN code:MISSING_RESPONSE_BODY
+        err = [NSError errorWithDomain:kMKNClientErrorDomain code:MISSING_RESPONSE_BODY
                               userInfo:@{NSLocalizedDescriptionKey:
                                              NSLocalizedString(@"Expected Response body, received empty", nil)}];
     }
@@ -159,6 +162,19 @@
         params[@"invitees"] = requestDetails.inviteesIds;
     }
     endpoint.parameters = params;
+    return endpoint;
+}
+
+-(HTTPEndpoint *)freeBusyFor:(NSString *)accountId from:(NSDate *)start until:(NSDate *)end {
+    if ([accountId length] == 0 ||
+        [start compare:end] == NSOrderedDescending ||
+        [end timeIntervalSinceDate:start] > MAX_RANGE_FOR_FREEBUSY) {
+        return nil;
+    }
+    HTTPEndpoint *endpoint = [[HTTPEndpoint alloc]init];
+    endpoint.path = [NSString stringWithFormat:@"/rest/accounts/%@/freebusy", accountId];
+    endpoint.parameters = @{@"min_date" : @([start timeIntervalSince1970]),
+                                @"max_date": @([end timeIntervalSince1970])};
     return endpoint;
 }
 
@@ -336,6 +352,21 @@
     return suggestions;
 }
 
+-(NSArray *)parseFreeBusy:(id)serverResponse andError:(NSError *__autoreleasing *)error {
+    NSArray *data = [self getDataArrayFromResponse:serverResponse optional:YES orError:error];
+    NSMutableArray *freeBusy = [[NSMutableArray alloc]init];
+    if (!*error && data) {
+        for (NSDictionary *freeBusyPeriod in data) {
+            NSTimeInterval start = [[freeBusyPeriod objectForKey:kMKNTimeRangeStartKey] doubleValue];
+            NSTimeInterval end = [[freeBusyPeriod objectForKey:kMKNTimeRangeEndKey] doubleValue];
+            [freeBusy addObject:@{kMKNTimeRangeStartKey: [NSDate dateWithTimeIntervalSince1970:start],
+                                  kMKNTimeRangeEndKey: [NSDate dateWithTimeIntervalSince1970:end]}];
+        }
+    }
+    
+    return freeBusy;
+}
+
 
 -(NSDictionary *)getDataFromResponse:(id)serverResponse orError:(NSError *__autoreleasing *)error {
     if ([serverResponse isKindOfClass:[NSDictionary class]]) {
@@ -375,7 +406,7 @@
 
 -(void)insertErrorCode:(NSInteger)errorCode andMessage:(NSString *)message into:(NSError *__autoreleasing *)error {
     if (error) {
-        *error = [NSError errorWithDomain:MEEKAN_CLIENT_ERROR_DOMAIN code:errorCode userInfo:@{NSLocalizedDescriptionKey: message}];
+        *error = [NSError errorWithDomain:kMKNClientErrorDomain code:errorCode userInfo:@{NSLocalizedDescriptionKey: message}];
     }
 }
 

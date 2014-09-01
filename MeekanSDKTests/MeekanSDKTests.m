@@ -287,6 +287,59 @@ static BOOL hasEntered;
     [self maximumDelayForAsyncTest:60];
 }
 
+-(void)testFreeBusyWithBadParameters {
+    [self startAsyncTest];
+    
+    NSDate *now = [NSDate dateWithTimeIntervalSince1970:trunc([[NSDate date] timeIntervalSince1970])];
+    [self.sdk freeBusyFor:self.connectedAccount fromDate:[now dateByAddingTimeInterval:600] untilDate:now onSuccess:^(NSArray *freeBusyRanges) {
+        XCTFail(@"Should have failed before time ranges are reversed");
+        [self endAsyncTest];
+    } onError:^(NSError *err) {
+        XCTAssertEqual(err.code, INVALID_PARAMETERS,@"Expected failure for invalid parameters");
+        [self endAsyncTest];
+    }];
+    
+    [self maximumDelayForAsyncTest:60];
+}
+
+-(void)testFreeBusyForValidBusyRange {
+    [self startAsyncTest];
+    
+    NSDate *now = [NSDate dateWithTimeIntervalSince1970:trunc([[NSDate date] timeIntervalSince1970])];
+    NSDate *inAnHour = [now dateByAddingTimeInterval:3600];
+    MeetingDetails *details = [[MeetingDetails alloc]init];
+    details.accountId = self.connectedAccount;
+    details.title = @"Test FreeBusy";
+    details.durationInMinutes = 10;
+    details.options = [NSSet setWithObject:inAnHour];
+    [self.sdk createMeeting:details onSuccess:^(MeetingServerResponse *response) {
+        // Created the meeting
+        [self.sdk freeBusyFor:self.connectedAccount fromDate:now untilDate:[inAnHour dateByAddingTimeInterval:[details durationInMinutes] * 60] onSuccess:^(NSArray *busyRanges) {
+            BOOL foundIt = NO;
+            NSDate *meetingEndTime = [inAnHour dateByAddingTimeInterval:[details durationInMinutes] * 60];
+            for (NSDictionary *range in busyRanges) {
+                NSComparisonResult meetingToRangeStart = [inAnHour compare:range[kMKNTimeRangeStartKey]];
+                NSComparisonResult meetingEndToRangeEnd = [meetingEndTime compare:range[kMKNTimeRangeEndKey]];
+                foundIt |=
+                 meetingToRangeStart != NSOrderedAscending &&
+                 meetingEndToRangeEnd != NSOrderedDescending;
+            }
+            XCTAssertTrue(foundIt, @"Expected to find the created meeting range in the busy times");
+            // The meeting duration must be included in one of the returned ranges
+            [self endAsyncTest];
+        } onError:^(NSError *err) {
+            XCTFail(@"Unexpected error: %@", err);
+            [self endAsyncTest];
+        }];
+    } onError:^(NSError *err) {
+        XCTFail(@"Unexpected error: %@", err);
+        [self endAsyncTest];
+    }];
+    
+    [self maximumDelayForAsyncTest:60];
+}
+
+
 -(NSDictionary *)readTestAccountWithId:(NSString *)accountId {
     NSString *plistPath = [[NSBundle bundleForClass:[self class]] pathForResource:@"testAccounts" ofType:@"plist"];
     NSDictionary *accounts = [NSDictionary dictionaryWithContentsOfFile:plistPath];

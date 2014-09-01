@@ -77,7 +77,7 @@ static MeekanSDK *sharedInstance = nil;
             errorCallback(argumentsError);
         }
     } else {
-        NSError *err = [NSError errorWithDomain:MEEKAN_CLIENT_ERROR_DOMAIN code:INVALID_PARAMETERS
+        NSError *err = [NSError errorWithDomain:kMKNClientErrorDomain code:INVALID_PARAMETERS
                                        userInfo:@{NSLocalizedDescriptionKey: [NSString stringWithFormat:@"Please review required parameters for Exchange Connection %@",self.apiAdapter]}];
         errorCallback(err);
     }
@@ -116,12 +116,12 @@ static MeekanSDK *sharedInstance = nil;
                 errorCallback(error);
             }];
         } else {
-            NSError *err = [NSError errorWithDomain:MEEKAN_CLIENT_ERROR_DOMAIN code:INVALID_PARAMETERS
+            NSError *err = [NSError errorWithDomain:kMKNClientErrorDomain code:INVALID_PARAMETERS
                                            userInfo:@{NSLocalizedDescriptionKey: [NSString stringWithFormat:@"Please review required parameters for Create Meeting %@",self.apiAdapter]}];
             errorCallback(err);
         }
     } else {
-        NSError *err = [NSError errorWithDomain:MEEKAN_CLIENT_ERROR_DOMAIN code:NOT_IMPLEMENTED_IN_THIS_SDK
+        NSError *err = [NSError errorWithDomain:kMKNClientErrorDomain code:NOT_IMPLEMENTED_IN_THIS_SDK
                                        userInfo:@{NSLocalizedDescriptionKey: [NSString stringWithFormat:@"Create Meeting is not supported in adapter %@",self.apiAdapter]}];
         errorCallback(err);
     }
@@ -147,12 +147,12 @@ static MeekanSDK *sharedInstance = nil;
                 errorCallback(error);
             }];
         } else {
-            NSError *err = [NSError errorWithDomain:MEEKAN_CLIENT_ERROR_DOMAIN code:INVALID_PARAMETERS
+            NSError *err = [NSError errorWithDomain:kMKNClientErrorDomain code:INVALID_PARAMETERS
                                            userInfo:@{NSLocalizedDescriptionKey: [NSString stringWithFormat:@"Please review required parameters for Update Meeting %@",self.apiAdapter]}];
             errorCallback(err);
         }
     } else {
-        NSError *err = [NSError errorWithDomain:MEEKAN_CLIENT_ERROR_DOMAIN code:NOT_IMPLEMENTED_IN_THIS_SDK
+        NSError *err = [NSError errorWithDomain:kMKNClientErrorDomain code:NOT_IMPLEMENTED_IN_THIS_SDK
                                        userInfo:@{NSLocalizedDescriptionKey: [NSString stringWithFormat:@"Update Meeting is not supported in adapter %@",self.apiAdapter]}];
         errorCallback(err);
     }
@@ -173,12 +173,12 @@ static MeekanSDK *sharedInstance = nil;
                 errorCallback(error);
             }];
         } else {
-            NSError *err = [NSError errorWithDomain:MEEKAN_CLIENT_ERROR_DOMAIN code:INVALID_PARAMETERS
+            NSError *err = [NSError errorWithDomain:kMKNClientErrorDomain code:INVALID_PARAMETERS
                                            userInfo:@{NSLocalizedDescriptionKey: [NSString stringWithFormat:@"Please review required parameters for Delete Meeting %@",self.apiAdapter]}];
             errorCallback(err);
         }
     } else {
-        NSError *err = [NSError errorWithDomain:MEEKAN_CLIENT_ERROR_DOMAIN code:NOT_IMPLEMENTED_IN_THIS_SDK
+        NSError *err = [NSError errorWithDomain:kMKNClientErrorDomain code:NOT_IMPLEMENTED_IN_THIS_SDK
                                        userInfo:@{NSLocalizedDescriptionKey: [NSString stringWithFormat:@"Delete Meeting is not supported in adapter %@",self.apiAdapter]}];
         errorCallback(err);
     }
@@ -204,12 +204,12 @@ static MeekanSDK *sharedInstance = nil;
                 errorCallback(error);
             }];
         } else {
-            NSError *err = [NSError errorWithDomain:MEEKAN_CLIENT_ERROR_DOMAIN code:INVALID_PARAMETERS
+            NSError *err = [NSError errorWithDomain:kMKNClientErrorDomain code:INVALID_PARAMETERS
                                            userInfo:@{NSLocalizedDescriptionKey: [NSString stringWithFormat:@"Please review required parameters for List Meetings %@",self.apiAdapter]}];
             errorCallback(err);
         }
     } else {
-        NSError *err = [NSError errorWithDomain:MEEKAN_CLIENT_ERROR_DOMAIN code:NOT_IMPLEMENTED_IN_THIS_SDK
+        NSError *err = [NSError errorWithDomain:kMKNClientErrorDomain code:NOT_IMPLEMENTED_IN_THIS_SDK
                                        userInfo:@{NSLocalizedDescriptionKey: [NSString stringWithFormat:@"List Meetings is not supported in adapter %@",self.apiAdapter]}];
         errorCallback(err);
     }
@@ -235,12 +235,12 @@ static MeekanSDK *sharedInstance = nil;
                 errorCallback(error);
             }];
         } else {
-            NSError *err = [NSError errorWithDomain:MEEKAN_CLIENT_ERROR_DOMAIN code:INVALID_PARAMETERS
+            NSError *err = [NSError errorWithDomain:kMKNClientErrorDomain code:INVALID_PARAMETERS
                                            userInfo:@{NSLocalizedDescriptionKey: [NSString stringWithFormat:@"Please review required parameters for Suggested Slots %@",self.apiAdapter]}];
             errorCallback(err);
         }
     } else {
-        NSError *err = [NSError errorWithDomain:MEEKAN_CLIENT_ERROR_DOMAIN code:NOT_IMPLEMENTED_IN_THIS_SDK
+        NSError *err = [NSError errorWithDomain:kMKNClientErrorDomain code:NOT_IMPLEMENTED_IN_THIS_SDK
                                        userInfo:@{NSLocalizedDescriptionKey: [NSString stringWithFormat:@"Suggested Slots is not supported in adapter %@",self.apiAdapter]}];
         errorCallback(err);
     }
@@ -270,12 +270,43 @@ static MeekanSDK *sharedInstance = nil;
                 errorCallback(error);
             }];
         } else {
-            NSError *err = [NSError errorWithDomain:MEEKAN_CLIENT_ERROR_DOMAIN code:INVALID_PARAMETERS
+            NSError *err = [NSError errorWithDomain:kMKNClientErrorDomain code:INVALID_PARAMETERS
                                            userInfo:@{NSLocalizedDescriptionKey: [NSString stringWithFormat:@"Please review required parameters for Current User %@",self.apiAdapter]}];
             errorCallback(err);
         }
     } else {
-        NSError *err = [NSError errorWithDomain:MEEKAN_CLIENT_ERROR_DOMAIN code:NOT_IMPLEMENTED_IN_THIS_SDK
+        NSError *err = [NSError errorWithDomain:kMKNClientErrorDomain code:NOT_IMPLEMENTED_IN_THIS_SDK
+                                       userInfo:@{NSLocalizedDescriptionKey: [NSString stringWithFormat:@"Current User is not supported in adapter %@",self.apiAdapter]}];
+        errorCallback(err);
+    }
+}
+
+- (void)freeBusyFor:(NSString *)account fromDate:(NSDate *)startDate untilDate:(NSDate *)endDate onSuccess:(FreeBusySuccess)successCallback onError:(MeekanResponseError)errorCallback {
+    if ([self.apiAdapter respondsToSelector:@selector(freeBusyFor:from:until:)]) {
+        HTTPEndpoint *endpoint = [self.apiAdapter freeBusyFor:account from:startDate until:endDate];
+        if (endpoint) {
+            [self.manager GET:endpoint.path parameters:endpoint.parameters success:^(NSURLSessionDataTask *task, id responseObject) {
+                NSError *errorInRespone = [self.apiAdapter checkIfError:responseObject];
+                if (!errorInRespone) {
+                    NSArray *list = [self.apiAdapter parseFreeBusy:responseObject andError:&errorInRespone];
+                    if (!errorInRespone) {
+                        successCallback(list);
+                    } else {
+                        errorCallback(errorInRespone);
+                    }
+                } else {
+                    errorCallback(errorInRespone);
+                }
+            } failure:^(NSURLSessionDataTask *task, NSError *error) {
+                errorCallback(error);
+            }];
+        } else {
+            NSError *err = [NSError errorWithDomain:kMKNClientErrorDomain code:INVALID_PARAMETERS
+                                           userInfo:@{NSLocalizedDescriptionKey: [NSString stringWithFormat:@"Please review required parameters for Current User %@",self.apiAdapter]}];
+            errorCallback(err);
+        }
+    } else {
+        NSError *err = [NSError errorWithDomain:kMKNClientErrorDomain code:NOT_IMPLEMENTED_IN_THIS_SDK
                                        userInfo:@{NSLocalizedDescriptionKey: [NSString stringWithFormat:@"Current User is not supported in adapter %@",self.apiAdapter]}];
         errorCallback(err);
     }
