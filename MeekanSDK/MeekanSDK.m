@@ -44,6 +44,7 @@ static MeekanSDK *sharedInstance = nil;
         self.manager.requestSerializer = [AFHTTPRequestSerializer serializer];
         [self.manager.requestSerializer setValue:[NSString stringWithFormat:@"Meekan %@", self.apiKey] forHTTPHeaderField:@"Authorization"];
         self.manager.responseSerializer = [AFJSONResponseSerializer serializer];
+        self.manager.responseSerializer.acceptableContentTypes = [self.manager.responseSerializer.acceptableContentTypes setByAddingObject:@"text/html"];
     }
     
     return self;
