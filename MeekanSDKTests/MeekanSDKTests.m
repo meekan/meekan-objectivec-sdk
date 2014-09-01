@@ -43,7 +43,9 @@ static BOOL hasEntered;
 
 - (void)tearDown
 {
-    // Put teardown code here. This method is called after the invocation of each test method in the class.
+    for (NSHTTPCookie *cookie in [[NSHTTPCookieStorage sharedHTTPCookieStorage] cookiesForURL:[NSURL URLWithString:@"http://localhost"]]) {
+        [[NSHTTPCookieStorage sharedHTTPCookieStorage] deleteCookie:cookie];
+    }
     [super tearDown];
 }
 
@@ -69,6 +71,51 @@ static BOOL hasEntered;
     [self maximumDelayForAsyncTest:60];
 }
 
+
+- (void)testLooukpExistingIdentifierShouldReturnIt {
+    [self startAsyncTest];
+    
+    [self.sdk queryForMeekanIdsOfIdentifiers:[NSSet setWithObject:@"eyal@meekan.com"] onSuccess:^(NSDictionary *identifiersToMeekanId) {
+        XCTAssertTrue([[identifiersToMeekanId objectForKey:@"eyal@meekan.com"] isEqualToString:self.connectedAccount], @"Expected current account to be recognized");
+        [self endAsyncTest];
+
+    } onError:^(NSError *err) {
+        XCTFail(@"Unexpected error: %@", err);
+        [self endAsyncTest];
+    }];
+    
+    [self maximumDelayForAsyncTest:60];
+}
+
+- (void)testLooukpNonExistingIdentifierShouldNotReturnIt {
+    [self startAsyncTest];
+    
+    [self.sdk queryForMeekanIdsOfIdentifiers:[NSSet setWithObject:@"bobdylan@gmail.com"] onSuccess:^(NSDictionary *identifiersToMeekanId) {
+        XCTAssertNil([identifiersToMeekanId objectForKey:@"bobdylan@gmail.com"] , @"Expected account not to be recognized");
+        [self endAsyncTest];
+        
+    } onError:^(NSError *err) {
+        XCTFail(@"Unexpected error: %@", err);
+        [self endAsyncTest];
+    }];
+    
+    [self maximumDelayForAsyncTest:60];
+}
+
+- (void)testLooukpBothExistingAndNotExistingIdentifiersShouldReturnOnlyRealOnes {
+    [self startAsyncTest];
+    
+    [self.sdk queryForMeekanIdsOfIdentifiers:[NSSet setWithObjects:@"bobdylan@gmail.com",@"eyal@meekan.com", nil] onSuccess:^(NSDictionary *identifiersToMeekanId) {
+        XCTAssertEqual([identifiersToMeekanId count], 1, @"Expected only one account to be recognized");
+        [self endAsyncTest];
+        
+    } onError:^(NSError *err) {
+        XCTFail(@"Unexpected error: %@", err);
+        [self endAsyncTest];
+    }];
+    
+    [self maximumDelayForAsyncTest:60];
+}
 
 - (void)testCreateSingleMeeting
 {
@@ -166,7 +213,7 @@ static BOOL hasEntered;
         NSString *newlyCreatedId = [details meetingId];
         [self.sdk listMeetingsForAccountSince:start onSuccess:^(MeetingList *meetingList) {
             XCTAssertTrue(!meetingList.hasMore, @"Returned all expected meetings");
-            XCTAssertTrue([meetingList.meetings count] == 1, @"Expected only the meeting created after the test start");
+            XCTAssertEqual([meetingList.meetings count], 1, @"Expected only the meeting created after the test start");
             MeetingFromServer *meeting = meetingList.meetings[0];
             XCTAssertTrue([meeting meetingId], @"Expected only the meeting created after the test start");
             XCTAssertEqualObjects([meeting meetingId], newlyCreatedId, @"Expected same created meeting");

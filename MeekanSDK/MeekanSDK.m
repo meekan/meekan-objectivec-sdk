@@ -96,6 +96,38 @@ static MeekanSDK *sharedInstance = nil;
     return allOk;
 }
 
+
+- (void)queryForMeekanIdsOfIdentifiers:(NSSet *)identifiers onSuccess:(MeekanIdLookupSuccess)successCallback onError:(MeekanResponseError)errorCallback {
+    if ([self.apiAdapter respondsToSelector:@selector(identifiersToMeekanId:)]) {
+        HTTPEndpoint *endpoint = [self.apiAdapter identifiersToMeekanId:identifiers];
+        if (endpoint) {
+            [self.manager GET:endpoint.path parameters:endpoint.parameters success:^(NSURLSessionDataTask *task, id responseObject) {
+                NSError *errorInRespone = [self.apiAdapter checkIfError:responseObject];
+                if (!errorInRespone) {
+                    NSDictionary *response = [self.apiAdapter parseIdToIdentifiersLookup:responseObject andError:&errorInRespone];
+                    if (!errorInRespone) {
+                        successCallback(response);
+                    } else {
+                        errorCallback(errorInRespone);
+                    }
+                } else {
+                    errorCallback(errorInRespone);
+                }
+            } failure:^(NSURLSessionDataTask *task, NSError *error) {
+                errorCallback(error);
+            }];
+        } else {
+            NSError *err = [NSError errorWithDomain:kMKNClientErrorDomain code:INVALID_PARAMETERS
+                                           userInfo:@{NSLocalizedDescriptionKey: [NSString stringWithFormat:@"Please review required parameters for Create Meeting %@",self.apiAdapter]}];
+            errorCallback(err);
+        }
+    } else {
+        NSError *err = [NSError errorWithDomain:kMKNClientErrorDomain code:NOT_IMPLEMENTED_IN_THIS_SDK
+                                       userInfo:@{NSLocalizedDescriptionKey: [NSString stringWithFormat:@"Create Meeting is not supported in adapter %@",self.apiAdapter]}];
+        errorCallback(err);
+    }
+}
+
 -(void)createMeeting:(MeetingDetails *)meeting onSuccess:(MeetingResponseSuccess)successCallback onError:(MeekanResponseError)errorCallback {
     if ([self.apiAdapter respondsToSelector:@selector(createMeetingUsing:)]) {
         HTTPEndpoint *endpoint = [self.apiAdapter createMeetingUsing:meeting];

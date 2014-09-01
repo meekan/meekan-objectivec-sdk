@@ -40,6 +40,15 @@ static const NSTimeInterval MAX_RANGE_FOR_FREEBUSY = THREE_MONTHS;
     return err;
 }
 
+-(HTTPEndpoint *)identifiersToMeekanId:(NSSet *)identifiers {
+    HTTPEndpoint *endpoint = [[HTTPEndpoint alloc]init];
+    endpoint.path = @"/rest/accounts";
+    if ([identifiers count]) {
+        endpoint.parameters = @{@"q": identifiers};
+    }
+    return endpoint;
+}
+
 -(HTTPEndpoint *)createMeetingUsing:(MeetingDetails *)details {
     return [self endpointForMeetingDetails:details];
 }
@@ -181,6 +190,15 @@ static const NSTimeInterval MAX_RANGE_FOR_FREEBUSY = THREE_MONTHS;
 -(void)setValue:(NSString *)value toKey:(NSString *)keyName inParameters:(NSMutableDictionary *)params {
     if (value && [value length] != 0) {
         [params setObject:value forKey:keyName];
+    }
+}
+
+-(NSDictionary *)parseIdToIdentifiersLookup:(id)serverResponse andError:(NSError *__autoreleasing *)error {
+    NSDictionary *data = [self getDataFromResponse:serverResponse orError:error];
+    if (!*error && data) {
+        return data;
+    } else {
+        return nil;
     }
 }
 
@@ -369,13 +387,21 @@ static const NSTimeInterval MAX_RANGE_FOR_FREEBUSY = THREE_MONTHS;
 
 
 -(NSDictionary *)getDataFromResponse:(id)serverResponse orError:(NSError *__autoreleasing *)error {
+    return [self getDataDictionaryFromResponse:serverResponse optional:YES orError:error];
+}
+
+-(NSDictionary *)getDataDictionaryFromResponse:(id)serverResponse optional:(BOOL)isOptional orError:(NSError *__autoreleasing *)error {
     if ([serverResponse isKindOfClass:[NSDictionary class]]) {
         NSDictionary *base = serverResponse;
         if ([base objectForKey:@"data"]) {
             NSDictionary *data = [base objectForKey:@"data"];
             return data;
         } else {
-            [self insertErrorCode:UNEXPECTED_RESPONSE_FORMAT andMessage:@"Expected response to include 'data'" into:error];
+            if (isOptional) {
+                return @{};
+            } else {
+                [self insertErrorCode:UNEXPECTED_RESPONSE_FORMAT andMessage:@"Expected response to include 'data'" into:error];
+            }
         }
     } else {
         [self insertErrorCode:UNEXPECTED_RESPONSE_FORMAT andMessage:@"Expected response to be a dictionary" into:error];

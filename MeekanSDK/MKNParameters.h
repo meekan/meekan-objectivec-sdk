@@ -34,6 +34,7 @@ typedef void (^ConnectedUserSuccess)(ConnectedUser *user);
 typedef void (^MeetingListSuccess)(MeetingList *meetingList);
 typedef void (^SlotListSuccess)(NSArray *slotSuggestions);
 typedef void (^FreeBusySuccess)(NSArray *freeBusyRanges);
+typedef void (^MeekanIdLookupSuccess)(NSDictionary *identifiersToMeekanId);
 
 
 typedef NS_ENUM(NSUInteger, RepeatInterval) {

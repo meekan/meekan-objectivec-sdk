@@ -23,6 +23,9 @@
 
 - (void)connectedUserDetailsWithSuccess:(ConnectedUserSuccess)success onError:(MeekanResponseError)error;
 
+
+- (void)queryForMeekanIdsOfIdentifiers:(NSSet *)identifiers onSuccess:(MeekanIdLookupSuccess)success onError:(MeekanResponseError)error;
+
 - (void)createMeeting:(MeetingDetails *)meeting onSuccess:(MeetingResponseSuccess)success onError:(MeekanResponseError)error;
 - (void)updateMeeting:(MeetingDetails *)meeting onSuccess:(MeetingResponseSuccess)success onError:(MeekanResponseError)error;
 - (void)deleteMeeting:(NSString *)meetingId onSuccess:(MeetingDeleteSuccess)success onError:(MeekanResponseError)error;
@@ -31,4 +34,5 @@
 - (void)suggestedSlots:(SlotSuggestionsRequest *)request onSuccess:(SlotListSuccess)success onError:(MeekanResponseError)error;
 
 - (void)freeBusyFor:(NSString *)account fromDate:(NSDate *)startDate untilDate:(NSDate *)endDate onSuccess:(FreeBusySuccess)success onError:(MeekanResponseError)error;
+
 @end
