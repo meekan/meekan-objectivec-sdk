@@ -6,7 +6,7 @@
 //  Copyright (c) 2014 Meekan. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
+@import UIKit;
 #import "MKNParameters.h"
 #import "MKNApiAdapter.h"
 
