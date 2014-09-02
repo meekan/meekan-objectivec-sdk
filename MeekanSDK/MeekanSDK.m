@@ -16,7 +16,7 @@
 
 @implementation MeekanSDK
 
-static NSString *API_URL = @"http://localhost:8080";
+static NSString *API_URL = @"https://playground.meekan.com";
 
 static MeekanSDK *sharedInstance = nil;
 
