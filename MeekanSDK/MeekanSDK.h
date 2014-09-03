@@ -37,4 +37,5 @@
 
 - (void)freeBusyFor:(NSString *)account fromDate:(NSDate *)startDate untilDate:(NSDate *)endDate onSuccess:(FreeBusySuccess)success onError:(MeekanResponseError)error;
 
+- (void)voteForMeeting:(NSString *)meetingId asAccount:(NSString *)accountId withVote:(PollVote)vote andPreferredTimes:(NSSet *)preferredTimes onSuccess:(MeetingPollVoteSuccess)success onError:(MeekanResponseError)error;
 @end

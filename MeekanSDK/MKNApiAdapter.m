@@ -79,19 +79,7 @@ static const NSTimeInterval MAX_RANGE_FOR_FREEBUSY = THREE_MONTHS;
     [params setObject:@(details.durationInMinutes) forKey:@"duration"];
     
     if ([details.options count]) {
-        NSMutableArray *options = [NSMutableArray arrayWithCapacity:[details.options count]];
-        [details.options enumerateObjectsUsingBlock:^(id obj, BOOL *stop) {
-            NSString *timestamp;
-            if ([obj isKindOfClass:[NSString class]]) {
-                timestamp = obj;
-            } else if ([obj isKindOfClass:[NSDate class]]) {
-                timestamp = [NSString stringWithFormat:@"%.f", [(NSDate *)obj timeIntervalSince1970]];
-            } else if ([obj isKindOfClass:[NSNumber class]]) {
-                timestamp = [NSString stringWithFormat:@"%ld", (long)[(NSNumber *)obj integerValue]];
-            }
-            [options addObject:timestamp];
-        }];
-        [params setObject:options forKey:@"opt"];
+        [params setObject:[self timestampsFromDates:details.options] forKey:@"opt"];
     }
     
     if (details.location) {
@@ -116,6 +104,22 @@ static const NSTimeInterval MAX_RANGE_FOR_FREEBUSY = THREE_MONTHS;
     endpoint.parameters = params;
     endpoint.path = @"/rest/meetings";
     return endpoint;
+}
+
+-(NSArray *)timestampsFromDates:(id<NSFastEnumeration>)timestamps {
+    NSMutableArray *options = [NSMutableArray array];
+    for (id obj in timestamps) {
+        NSString *timestamp;
+        if ([obj isKindOfClass:[NSString class]]) {
+            timestamp = obj;
+        } else if ([obj isKindOfClass:[NSDate class]]) {
+            timestamp = [NSString stringWithFormat:@"%.f", [(NSDate *)obj timeIntervalSince1970]];
+        } else if ([obj isKindOfClass:[NSNumber class]]) {
+            timestamp = [NSString stringWithFormat:@"%ld", (long)[(NSNumber *)obj integerValue]];
+        }
+        [options addObject:timestamp];
+    }
+    return options;
 }
 
 -(HTTPEndpoint *)updateMeetingUsing:(MeetingDetails *)details {
@@ -185,6 +189,37 @@ static const NSTimeInterval MAX_RANGE_FOR_FREEBUSY = THREE_MONTHS;
     endpoint.parameters = @{@"min_date" : @([start timeIntervalSince1970]),
                                 @"max_date": @([end timeIntervalSince1970])};
     return endpoint;
+}
+
+-(HTTPEndpoint *)voteForMeeting:(NSString *)meetingId asAccount:(NSString *)accountId withVote:(PollVote)vote andPreferredTimes:(NSSet *)preferredTimes {
+    if ([meetingId length] && [accountId length] && [self isVote:vote matchesTimes:preferredTimes]) {
+        HTTPEndpoint *endpoint = [[HTTPEndpoint alloc]init];
+        endpoint.path = [NSString stringWithFormat:@"/rest/meetings/%@/poll/%@", meetingId, accountId];
+        NSMutableDictionary *params = [NSMutableDictionary dictionaryWithObject:@(vote) forKey:@"resp_type"];
+        if ([preferredTimes count]) {
+            params[@"preferred"] = [self timestampsFromDates:preferredTimes];
+        }
+        endpoint.parameters = params;
+        return endpoint;
+    } else {
+        return nil;
+    }
+}
+
+- (BOOL)isVote:(PollVote)vote matchesTimes:(NSSet *)preferredTimes {
+    switch (vote) {
+        case NOT_YET:
+            return NO;
+        case CUSTOM:
+        case MAYBE:
+            return preferredTimes != nil;
+        case NOT_COMING:
+        case WHEN_AVAILABLE:
+        case ALWAYS:
+            return [preferredTimes count] == 0;
+        default:
+            return NO;
+    }
 }
 
 -(void)setValue:(NSString *)value toKey:(NSString *)keyName inParameters:(NSMutableDictionary *)params {

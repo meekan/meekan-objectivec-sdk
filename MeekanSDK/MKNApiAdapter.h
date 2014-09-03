@@ -27,6 +27,7 @@
 - (HTTPEndpoint *)suggestedSlotsUsing:(SlotSuggestionsRequest *)requestDetails;
 - (HTTPEndpoint *)freeBusyFor:(NSString *)accountId from:(NSDate *)start until:(NSDate *)end;
 - (HTTPEndpoint *)identifiersToMeekanId:(NSSet *)identifiers;
+- (HTTPEndpoint *)voteForMeeting:(NSString *)meetingId asAccount:(NSString *)accountId withVote:(PollVote)vote andPreferredTimes:(NSSet *)preferredTimes;
 
 /**
  Parses the result into an object. If there is an error, returns nil and in the NSError
