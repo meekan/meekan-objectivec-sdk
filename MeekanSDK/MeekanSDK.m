@@ -26,21 +26,25 @@ static MeekanSDK *sharedInstance = nil;
 }
 
 +(MeekanSDK *)sharedInstanceWithApiKey:(NSString *)apiKey {
+    return [MeekanSDK sharedInstanceWithApiKey:apiKey andBaseUrl:API_URL];
+}
+
++(instancetype)sharedInstanceWithApiKey:(NSString *)apiKey andBaseUrl:(NSString *)baseUrl {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        sharedInstance = [[super alloc] initWithApiKey:apiKey];
+        sharedInstance = [[super alloc] initWithApiKey:apiKey andBaseUrl:baseUrl];
     });
     return sharedInstance;
 }
 
--(id)initWithApiKey:(NSString *)apiKey {
+- (id)initWithApiKey:(NSString *)apiKey andBaseUrl:(NSString *)baseUrl {
     if ([apiKey length] == 0) {
         NSLog(@"%@: API Key is Empty", self);
     }
     if (self = [self init]) {
         self.apiKey = apiKey;
         self.apiAdapter = [[ApiV1Adapter alloc]init];
-        self.manager = [[AFHTTPSessionManager alloc]initWithBaseURL:[NSURL URLWithString:API_URL]];
+        self.manager = [[AFHTTPSessionManager alloc]initWithBaseURL:[NSURL URLWithString:baseUrl]];
         self.manager.requestSerializer = [AFHTTPRequestSerializer serializer];
         [self.manager.requestSerializer setValue:[NSString stringWithFormat:@"Meekan %@", self.apiKey] forHTTPHeaderField:@"Authorization"];
         self.manager.responseSerializer = [AFJSONResponseSerializer serializer];
@@ -48,6 +52,10 @@ static MeekanSDK *sharedInstance = nil;
     }
     
     return self;
+}
+
+-(id)initWithApiKey:(NSString *)apiKey {
+    return [self initWithApiKey:apiKey andBaseUrl:API_URL];
 }
 
 - (MKNGoogleLoginViewController *)connectWithGoogleWithCompletionHandler:(MKNGoogleLoginViewControllerCompletionHandler)completion {

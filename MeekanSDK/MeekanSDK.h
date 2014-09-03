@@ -15,8 +15,10 @@
 @property (nonatomic, strong) id<ApiAdapter> apiAdapter;
 
 + (instancetype)sharedInstanceWithApiKey:(NSString *)apiKey;
++ (instancetype)sharedInstanceWithApiKey:(NSString *)apiKey andBaseUrl:(NSString *)baseUrl;
 + (instancetype)sharedInstance;
 - (id)initWithApiKey:(NSString *)apiKey;
+- (id)initWithApiKey:(NSString *)apiKey andBaseUrl:(NSString *)baseUrl;
 
 - (MKNGoogleLoginViewController *)connectWithGoogleWithCompletionHandler:(MKNGoogleLoginViewControllerCompletionHandler)completion;
 - (void)connectWithExchangeUser:(NSString *)username withPassword:(NSString *)password withEmail:(NSString *)email withServerUrl:(NSString *)url andDomain:(NSString *)domain onSuccess:(ConnectedUserSuccess)success onError:(MeekanResponseError)error;
