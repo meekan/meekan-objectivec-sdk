@@ -37,7 +37,7 @@ static BOOL hasEntered;
                                    NSHTTPCookieDomain: @"localhost"}];
     [[NSHTTPCookieStorage sharedHTTPCookieStorage] setCookie:session];
     [[NSHTTPCookieStorage sharedHTTPCookieStorage] setCookie:sessionName];
-    self.sdk =[MeekanSDK sharedInstanceWithApiKey:@"AnyKey"];
+    self.sdk =[MeekanSDK sharedInstanceWithApiKey:@"AnyKey" andBaseUrl:@"http://localhost:8080"];
     self.connectedAccount = @"4785074604081152";
 }
 
