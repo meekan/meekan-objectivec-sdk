@@ -349,9 +349,7 @@ static const NSTimeInterval MAX_RANGE_FOR_FREEBUSY = THREE_MONTHS;
 
 -(NSDictionary *)parseVotesFromMeetingDetails:(NSDictionary *)votes {
     NSMutableDictionary *parsedVotes = [NSMutableDictionary dictionary];
-    [votes enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
-        NSString *voterId = key;
-        NSDictionary *serverVote;
+    [votes enumerateKeysAndObjectsUsingBlock:^(NSString *voterId, NSDictionary *serverVote, BOOL *stop) {
         MeetingVote *vote = [[MeetingVote alloc]init];
         vote.accountId = voterId;
         vote.lastUpdate = [NSDate dateWithTimeIntervalSince1970:[[serverVote objectForKey:@"updated"] doubleValue]];

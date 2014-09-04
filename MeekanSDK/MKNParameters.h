@@ -141,6 +141,7 @@ typedef NS_ENUM(NSUInteger, PollVote) {
 @end
 
 @interface MeetingList : NSObject
+/** The NSArray contains `MeetingFromServer`s */
 @property (nonatomic, strong) NSArray *meetings;
 @property (nonatomic) BOOL hasMore;
 @end

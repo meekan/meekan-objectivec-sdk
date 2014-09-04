@@ -23,29 +23,14 @@ static BOOL hasEntered;
 - (void)setUp
 {
     [super setUp];
-    NSHTTPCookie *session = [NSHTTPCookie cookieWithProperties:
-                             @{NSHTTPCookieName: @"session",
-                               NSHTTPCookiePath: @"/",
-                               NSHTTPCookieValue: @"eyJfbWVzc2FnZXMiOltbIldlbGNvbWUhICBZb3UgaGF2ZSBiZWVuIHJlZ2lzdGVyZWQgYXMgYSBuZXcgdXNlciBhbmQgbG9nZ2VkIGluIHRocm91Z2ggR29vZ2xlIE9BdXRoMi4iLCJzdWNjZXNzIl1dLCJzdGF0ZSI6IllFUlZUVTZRWDI3TkRWRlJZQ1paUUcySlNOUlE3UEhRIiwiZ29vZ2xlX29hdXRoMiI6IntcImZ1bGxfbmFtZVwiOiBcIkV5YWwgTWVla2FuXCIsIFwiaWRcIjogXCIxMTU3NjUxMzc1OTgwMTI3ODIzMTZcIiwgXCJmaXJzdF9uYW1lXCI6IFwiRXlhbFwiLCBcImxhc3RfbmFtZVwiOiBcIk1lZWthblwiLCBcImVtYWlsXCI6IFwiZXlhbEBtZWVrYW4uY29tXCJ9In0=|1409210860|871179f93c3b00f5a3d2e3f1869f15f873e35992",
-                               NSHTTPCookieVersion: @"1",
-                               NSHTTPCookieDomain: @"localhost"}];
-    NSHTTPCookie *sessionName = [NSHTTPCookie cookieWithProperties:
-                                 @{NSHTTPCookieName: @"session_name",
-                                   NSHTTPCookiePath: @"/",
-                                   NSHTTPCookieValue: @"eyJfdXNlciI6WzU2Mjk0OTk1MzQyMTMxMjAsMSwiVjZtbzRsTG5yaTRLZGltSmZGUnJDcCIsMTQwOTIxMDg1OSwxNDA5MjEwODU5XX0=|1409210865|9e9d4c9fd956b061b69d9ea98f11ca68c694043d",
-                                   NSHTTPCookieVersion: @"1",
-                                   NSHTTPCookieDomain: @"localhost"}];
-    [[NSHTTPCookieStorage sharedHTTPCookieStorage] setCookie:session];
-    [[NSHTTPCookieStorage sharedHTTPCookieStorage] setCookie:sessionName];
+    [self connectAsGoogleAccount];
     self.sdk =[MeekanSDK sharedInstanceWithApiKey:@"AnyKey" andBaseUrl:@"http://localhost:8080"];
     self.connectedAccount = @"4785074604081152";
 }
 
 - (void)tearDown
 {
-    for (NSHTTPCookie *cookie in [[NSHTTPCookieStorage sharedHTTPCookieStorage] cookiesForURL:[NSURL URLWithString:@"http://localhost"]]) {
-        [[NSHTTPCookieStorage sharedHTTPCookieStorage] deleteCookie:cookie];
-    }
+    [self deleteCurrentCookies];
     [super tearDown];
 }
 
@@ -247,17 +232,15 @@ static BOOL hasEntered;
 
 -(void)testConnectUserWithExchange {
     [self startAsyncTest];
-    // Disconnect from all accounts
-    for (NSHTTPCookie *cookie in [[NSHTTPCookieStorage sharedHTTPCookieStorage] cookiesForURL:[NSURL URLWithString:@"http://localhost"]]) {
-        [[NSHTTPCookieStorage sharedHTTPCookieStorage] deleteCookie:cookie];
-    }
+    
+    [self deleteCurrentCookies];
     
     [self.sdk connectedUserDetailsWithSuccess:^(ConnectedUser *user) {
         XCTFail(@"Expected to be disconnected, received %@", user);
         [self endAsyncTest];
     } onError:^(NSError *err) {
-        NSDictionary *accountParams = [self readTestAccountWithId:@"exchange1"];
-        [self.sdk connectWithExchangeUser:accountParams[@"username"] withPassword:accountParams[@"password"] withEmail:accountParams[@"email"] withServerUrl:accountParams[@"url"] andDomain:accountParams[@"domain"] onSuccess:^(ConnectedUser *user) {
+        [self connectAsTestExchangeOnSuccess:^(ConnectedUser *user) {
+            NSDictionary *accountParams = [self readTestAccountWithId:@"exchange1"];
             XCTAssertNotNil(user, @"Expected connected user");
             XCTAssertTrue([user.userId length] != 0, @"Expected user with Meekan ID, reeived empty value");
             XCTAssertTrue([user.accounts count] == 1, @"Expected user with one account, received %lu", [user.accounts count] );
@@ -268,7 +251,6 @@ static BOOL hasEntered;
             [self endAsyncTest];
         }];
     }];
-    
     
     [self maximumDelayForAsyncTest:60];
 }
@@ -347,6 +329,99 @@ static BOOL hasEntered;
     }];
     
     [self maximumDelayForAsyncTest:60];
+}
+
+-(void)testVoteForMeetingFromConnectedAccount {
+    
+    // As Google
+    MeetingDetails *details = [[MeetingDetails alloc]init];
+    details.accountId = self.connectedAccount;
+    details.title = @"Test Multiple";
+    details.durationInMinutes = 10;
+    NSDate *start = [NSDate dateWithTimeIntervalSince1970:1409477400];
+    NSSet *options = [NSSet setWithObjects:
+                      [start dateByAddingTimeInterval:3600],
+                      [start dateByAddingTimeInterval:7200],
+                      [start dateByAddingTimeInterval:10800], nil];
+    details.options = options;
+    details.participants = [[MeetingParticipants alloc]init];
+    NSDictionary *accountDetails = [self readTestAccountWithId:@"exchange1"];
+    details.participants.emails = [NSSet setWithObject:accountDetails[@"email"]];
+    [self.sdk createMeeting:details onSuccess:^(MeetingServerResponse *response) {
+        [self connectAsTestExchangeOnSuccess:^(ConnectedUser *user) {
+            
+            ConnectedAccount *invitedAccount = [[[user accounts] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"SELF.identifier = %@", accountDetails[@"email"]]] firstObject];
+            XCTAssertNotNil(invitedAccount, @"The invited account is supposed to be in this user");
+            NSDate *beforeVote = [NSDate date];
+            NSSet *preferredTimes = [NSSet setWithObject:[start dateByAddingTimeInterval:10800]];
+            [self.sdk voteForMeeting:response.meetingId asAccount:invitedAccount.meekanId withVote:CUSTOM andPreferredTimes:preferredTimes
+                           onSuccess:^(NSString *meetingId, NSString *accountId) {
+                XCTAssertEqualObjects(meetingId, response.meetingId, @"Expected response for same meeting");
+                XCTAssertEqualObjects(accountId, invitedAccount.meekanId, @"Expected response for same account");
+                
+                [self connectAsGoogleAccount];
+                [self.sdk listMeetingsForAccountSince:beforeVote onSuccess:^(MeetingList *meetingList) {
+                    BOOL foundMeeting = NO;
+                    for (MeetingFromServer *meeting in meetingList.meetings) {
+                        if ([meeting.meetingId isEqualToString:response.meetingId]) {
+                            foundMeeting = YES;
+                            XCTAssertNotNil([meeting.votes objectForKey:invitedAccount.meekanId], @"Expected to contain invited user's vote");
+                            MeetingVote *vote = meeting.votes[invitedAccount.meekanId];
+                            XCTAssertEqual([vote vote], CUSTOM, @"Expected same vote as sent before");
+                            XCTAssertTrue([[vote preferredTimes] isEqualToSet:preferredTimes], @"Expected returned preferences to be %@, received %@", preferredTimes, vote.preferredTimes);
+                        }
+                    }
+                    XCTAssertTrue(foundMeeting, @"Expected changes in the meeting since we voted on it");
+                    [self endAsyncTest];
+                } onError:^(NSError *err) {
+                    XCTFail(@"Unexpected error: %@", err);
+                    [self endAsyncTest];
+                }];
+                
+            } onError:^(NSError *err) {
+                XCTFail(@"Unexpected error: %@", err);
+                [self endAsyncTest];
+            }];
+        } onError:^(NSError *err) {
+            XCTFail(@"Unexpected error: %@", err);
+            [self endAsyncTest];
+        }];
+    } onError:^(NSError *err) {
+        XCTFail(@"Unexpected error: %@", err);
+        [self endAsyncTest];
+    }];
+    [self maximumDelayForAsyncTest:60];
+   
+}
+
+-(void)deleteCurrentCookies {
+    for (NSHTTPCookie *cookie in [[NSHTTPCookieStorage sharedHTTPCookieStorage] cookiesForURL:[NSURL URLWithString:@"http://localhost"]]) {
+        [[NSHTTPCookieStorage sharedHTTPCookieStorage] deleteCookie:cookie];
+    }
+}
+
+-(void)connectAsGoogleAccount {
+    [self deleteCurrentCookies];
+    NSHTTPCookie *session = [NSHTTPCookie cookieWithProperties:
+                             @{NSHTTPCookieName: @"session",
+                               NSHTTPCookiePath: @"/",
+                               NSHTTPCookieValue: @"eyJfbWVzc2FnZXMiOltbIldlbGNvbWUhICBZb3UgaGF2ZSBiZWVuIHJlZ2lzdGVyZWQgYXMgYSBuZXcgdXNlciBhbmQgbG9nZ2VkIGluIHRocm91Z2ggR29vZ2xlIE9BdXRoMi4iLCJzdWNjZXNzIl1dLCJzdGF0ZSI6IllFUlZUVTZRWDI3TkRWRlJZQ1paUUcySlNOUlE3UEhRIiwiZ29vZ2xlX29hdXRoMiI6IntcImZ1bGxfbmFtZVwiOiBcIkV5YWwgTWVla2FuXCIsIFwiaWRcIjogXCIxMTU3NjUxMzc1OTgwMTI3ODIzMTZcIiwgXCJmaXJzdF9uYW1lXCI6IFwiRXlhbFwiLCBcImxhc3RfbmFtZVwiOiBcIk1lZWthblwiLCBcImVtYWlsXCI6IFwiZXlhbEBtZWVrYW4uY29tXCJ9In0=|1409210860|871179f93c3b00f5a3d2e3f1869f15f873e35992",
+                               NSHTTPCookieVersion: @"1",
+                               NSHTTPCookieDomain: @"localhost"}];
+    NSHTTPCookie *sessionName = [NSHTTPCookie cookieWithProperties:
+                                 @{NSHTTPCookieName: @"session_name",
+                                   NSHTTPCookiePath: @"/",
+                                   NSHTTPCookieValue: @"eyJfdXNlciI6WzU2Mjk0OTk1MzQyMTMxMjAsMSwiVjZtbzRsTG5yaTRLZGltSmZGUnJDcCIsMTQwOTIxMDg1OSwxNDA5MjEwODU5XX0=|1409210865|9e9d4c9fd956b061b69d9ea98f11ca68c694043d",
+                                   NSHTTPCookieVersion: @"1",
+                                   NSHTTPCookieDomain: @"localhost"}];
+    [[NSHTTPCookieStorage sharedHTTPCookieStorage] setCookie:session];
+    [[NSHTTPCookieStorage sharedHTTPCookieStorage] setCookie:sessionName];
+}
+
+-(void)connectAsTestExchangeOnSuccess:(ConnectedUserSuccess)successCallback onError:(MeekanResponseError)errorCallback {
+    [self deleteCurrentCookies];
+    NSDictionary *accountParams = [self readTestAccountWithId:@"exchange1"];
+    [self.sdk connectWithExchangeUser:accountParams[@"username"] withPassword:accountParams[@"password"] withEmail:accountParams[@"email"] withServerUrl:accountParams[@"url"] andDomain:accountParams[@"domain"] onSuccess:successCallback onError:errorCallback];
 }
 
 -(void)testFreeBusyForValidBusyRange {
