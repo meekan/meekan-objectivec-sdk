@@ -39,7 +39,7 @@ Pod::Spec.new do |s|
   #
 
   s.name         = "MeekanSDK"
-  s.version      = "1.0.0"
+  s.version      = "1.0.1"
   s.summary      = "Wrapper for Meekan's REST API - Schedule meetings easily."
 
   s.description  = <<-DESC
