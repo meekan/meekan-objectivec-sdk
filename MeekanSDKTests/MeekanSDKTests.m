@@ -16,6 +16,7 @@ static BOOL hasEntered;
 @interface MeekanSDKTests : XCTestCase
 @property (nonatomic, strong) MeekanSDK *sdk;
 @property (nonatomic, strong) NSString *connectedAccount;
+@property (nonatomic, strong) NSMutableSet *danglingMeetings;
 @end
 
 @implementation MeekanSDKTests
@@ -25,13 +26,40 @@ static BOOL hasEntered;
     [super setUp];
     [self connectAsGoogleAccount];
     self.sdk =[MeekanSDK sharedInstanceWithApiKey:@"AnyKey" andBaseUrl:@"http://localhost:8080"];
-    self.connectedAccount = @"4785074604081152";
+    self.connectedAccount = @"4993981813358592";
+    self.danglingMeetings = [NSMutableSet set];
 }
 
 - (void)tearDown
 {
-    [self deleteCurrentCookies];
-    [super tearDown];
+    if ([self.danglingMeetings count]) {
+        [self startAsyncTest];
+        [self deleteDanglingMeetings];
+        [self maximumDelayForAsyncTest:60];
+    } else {
+        [self deleteCurrentCookies];
+        [super tearDown];
+    }
+}
+
+-(void)deleteDanglingMeetings {
+    NSInteger __block pending = [self.danglingMeetings count];
+    for (NSString *meetingId in self.danglingMeetings) {
+        [self.sdk deleteMeeting:meetingId onSuccess:^(NSString *deletedMeekanId) {
+            pending--;
+            if (pending == 0) {
+                [self deleteCurrentCookies];
+                [self endAsyncTest];
+            }
+        } onError:^(NSError *err) {
+            pending--;
+            if (pending == 0) {
+                [self deleteCurrentCookies];
+                [self endAsyncTest];
+            }
+            // Do Nothing
+        }];
+    }
 }
 
 - (void)testCreateDraftMeeting
@@ -46,6 +74,7 @@ static BOOL hasEntered;
     [self.sdk createMeeting:details onSuccess:^(MeetingServerResponse *details) {
         XCTAssertNotNil(details, @"Expected returned details");
         XCTAssertNotNil(details.meetingId, @"Expected Created meeting ID");
+        [self.danglingMeetings addObject:details.meetingId];
         XCTAssertNotNil(details.remoteEventIds, @"Expected non-empty remote list");
         XCTAssertTrue([details.remoteEventIds count] == 0, @"Should not create remote meetings, returned: %@", details.remoteEventIds);
         [self endAsyncTest];
@@ -60,8 +89,8 @@ static BOOL hasEntered;
 - (void)testLooukpExistingIdentifierShouldReturnIt {
     [self startAsyncTest];
     
-    [self.sdk queryForMeekanIdsOfIdentifiers:[NSSet setWithObject:@"eyal@meekan.com"] onSuccess:^(NSDictionary *identifiersToMeekanId) {
-        XCTAssertTrue([[identifiersToMeekanId objectForKey:@"eyal@meekan.com"] isEqualToString:self.connectedAccount], @"Expected current account to be recognized");
+    [self.sdk queryForMeekanIdsOfIdentifiers:[NSSet setWithObject:@"eyal.yavor@gmail.com"] onSuccess:^(NSDictionary *identifiersToMeekanId) {
+        XCTAssertEqualObjects([identifiersToMeekanId objectForKey:@"eyal.yavor@gmail.com"], self.connectedAccount, @"Expected current account to be recognized");
         [self endAsyncTest];
 
     } onError:^(NSError *err) {
@@ -90,7 +119,7 @@ static BOOL hasEntered;
 - (void)testLooukpBothExistingAndNotExistingIdentifiersShouldReturnOnlyRealOnes {
     [self startAsyncTest];
     
-    [self.sdk queryForMeekanIdsOfIdentifiers:[NSSet setWithObjects:@"bobdylan@gmail.com",@"eyal@meekan.com", nil] onSuccess:^(NSDictionary *identifiersToMeekanId) {
+    [self.sdk queryForMeekanIdsOfIdentifiers:[NSSet setWithObjects:@"bobdylan@gmail.com",@"eyal.yavor@gmail.com", nil] onSuccess:^(NSDictionary *identifiersToMeekanId) {
         XCTAssertEqual([identifiersToMeekanId count], 1, @"Expected only one account to be recognized");
         [self endAsyncTest];
         
@@ -106,7 +135,7 @@ static BOOL hasEntered;
 {
     
     MeetingDetails *details = [[MeetingDetails alloc]init];
-    details.accountId = @"4785074604081152";
+    details.accountId = self.connectedAccount;
     details.title = @"Test Single";
     details.durationInMinutes = 10;
     details.options = [NSSet setWithObject:[NSDate date]];
@@ -115,6 +144,7 @@ static BOOL hasEntered;
     [self.sdk createMeeting:details onSuccess:^(MeetingServerResponse *details) {
         XCTAssertNotNil(details, @"Expected returned details");
         XCTAssertNotNil(details.meetingId, @"Expected Created meeting ID");
+        [self.danglingMeetings addObject:details.meetingId];
         XCTAssertNotNil(details.remoteEventIds, @"Expected non-empty remote list");
         XCTAssertTrue([details.remoteEventIds count] == 1, @"Should create single remote meeting, returned: %@", details.remoteEventIds);
         [self assertValidRemoteMeeting:[details.remoteEventIds firstObject]];
@@ -129,7 +159,7 @@ static BOOL hasEntered;
 - (void)testCreateMultipleMeeting
 {
     MeetingDetails *details = [[MeetingDetails alloc]init];
-    details.accountId = @"4785074604081152";
+    details.accountId = self.connectedAccount;
     details.title = @"Test Multiple";
     details.durationInMinutes = 10;
     NSDate *start = [NSDate dateWithTimeIntervalSince1970:1409477400];
@@ -144,6 +174,7 @@ static BOOL hasEntered;
     [self.sdk createMeeting:details onSuccess:^(MeetingServerResponse *details) {
         XCTAssertNotNil(details, @"Expected returned details");
         XCTAssertNotNil(details.meetingId, @"Expected Created meeting ID");
+        [self.danglingMeetings addObject:details.meetingId];
         XCTAssertNotNil(details.remoteEventIds, @"Expected non-empty remote list");
         XCTAssertTrue([details.remoteEventIds count] == [options count],
                       @"Should create %lu remote meetings, returned: %@", (unsigned long)[options count], details.remoteEventIds);
@@ -163,7 +194,7 @@ static BOOL hasEntered;
 
 -(void)testCreateAndThenDeleteDraft {
     MeetingDetails *details = [[MeetingDetails alloc]init];
-    details.accountId = @"4785074604081152";
+    details.accountId = self.connectedAccount;
     details.title = @"Test";
     details.durationInMinutes = 10;
     
@@ -188,7 +219,7 @@ static BOOL hasEntered;
 
 -(void)testMeetingListIsReturnedWithOneMeetingAfterCreatingIt {
     MeetingDetails *details = [[MeetingDetails alloc]init];
-    details.accountId = @"4785074604081152";
+    details.accountId = self.connectedAccount;
     details.title = @"Test";
     details.durationInMinutes = 10;
     
@@ -196,6 +227,7 @@ static BOOL hasEntered;
     NSDate *start = [NSDate date];
     [self.sdk createMeeting:details onSuccess:^(MeetingServerResponse *details) {
         NSString *newlyCreatedId = [details meetingId];
+        [self.danglingMeetings addObject:details.meetingId];
         [self.sdk listMeetingsForAccountSince:start onSuccess:^(MeetingList *meetingList) {
             XCTAssertTrue(!meetingList.hasMore, @"Returned all expected meetings");
             XCTAssertEqual([meetingList.meetings count], 1, @"Expected only the meeting created after the test start");
@@ -316,6 +348,58 @@ static BOOL hasEntered;
     [self maximumDelayForAsyncTest:60];
 }
 
+-(void)testSuggestedSlotsFrameWithDrivingTime {
+    [self startAsyncTest];
+    
+    MeetingLocation *location1 = [[MeetingLocation alloc]init];
+    location1.latitude = 32.086480f;
+    location1.longitude = 34.782296f;
+    location1.shortDesc = @"Tel Aviv Office";
+    
+    NSDate *scenarioStart = [NSDate dateWithTimeIntervalSince1970:trunc([[NSDate date] timeIntervalSince1970])+180*60];
+    NSDateComponents *comps = [[NSCalendar currentCalendar]components:NSYearCalendarUnit|NSMonthCalendarUnit|NSDayCalendarUnit|NSHourCalendarUnit fromDate:scenarioStart];
+    [comps setMinute:60];
+    [comps setSecond:0];
+    scenarioStart = [[NSCalendar currentCalendar]dateFromComponents:comps];
+    
+    MeetingDetails *details = [[MeetingDetails alloc]init];
+    details.accountId = self.connectedAccount;
+    details.title = @"In Tel Aviv";
+    details.durationInMinutes = 10;
+    details.options = [NSSet setWithObject:scenarioStart];
+    details.location = location1;
+    
+    [self.sdk createMeeting:details onSuccess:^(MeetingServerResponse *details) {
+        //      [self.danglingMeetings addObject:details.meetingId];
+        SlotSuggestionsRequest *request = [[SlotSuggestionsRequest alloc]init];
+        request.organizerAccountId = self.connectedAccount;
+        request.duration = 10; // Minutes
+        request.timeFrameRanges = @[ @[ [scenarioStart dateByAddingTimeInterval:-120*60], [scenarioStart dateByAddingTimeInterval:120 * 60]]]; // One big range of three hours around the meeting, for a 10 minutes meeting
+        request.locationLatLong = @"32.159171,34.808994";
+        request.useLocationPadding = YES;
+        
+        [self.sdk suggestedSlots:request onSuccess:^(NSArray *slotSuggestions) {
+            XCTAssertGreaterThan([slotSuggestions count], 0, @"With a big grame, expected at least one suggestion, received %ld: %@", [slotSuggestions count], slotSuggestions);
+            BOOL atLeastOneHadPadding = NO;
+            for (SlotSuggestion *suggestion in slotSuggestions) {
+                atLeastOneHadPadding |= [suggestion paddingAfter] || [suggestion paddingBefore];
+            }
+            XCTAssertTrue(atLeastOneHadPadding, @"Slot suggestion expected to have padding, but didn't: %@", slotSuggestions);
+            [self endAsyncTest];
+        } onError:^(NSError *err) {
+            XCTFail(@"Unexpected error: %@", err);
+            [self endAsyncTest];
+        }];
+        
+        
+    } onError:^(NSError *err) {
+        XCTFail(@"Unexpected error: %@", err);
+        [self endAsyncTest];
+    }];
+    
+    [self maximumDelayForAsyncTest:60];
+}
+
 -(void)testFreeBusyWithBadParameters {
     [self startAsyncTest];
     
@@ -405,13 +489,13 @@ static BOOL hasEntered;
     NSHTTPCookie *session = [NSHTTPCookie cookieWithProperties:
                              @{NSHTTPCookieName: @"session",
                                NSHTTPCookiePath: @"/",
-                               NSHTTPCookieValue: @"eyJfbWVzc2FnZXMiOltbIldlbGNvbWUhICBZb3UgaGF2ZSBiZWVuIHJlZ2lzdGVyZWQgYXMgYSBuZXcgdXNlciBhbmQgbG9nZ2VkIGluIHRocm91Z2ggR29vZ2xlIE9BdXRoMi4iLCJzdWNjZXNzIl1dLCJzdGF0ZSI6IllFUlZUVTZRWDI3TkRWRlJZQ1paUUcySlNOUlE3UEhRIiwiZ29vZ2xlX29hdXRoMiI6IntcImZ1bGxfbmFtZVwiOiBcIkV5YWwgTWVla2FuXCIsIFwiaWRcIjogXCIxMTU3NjUxMzc1OTgwMTI3ODIzMTZcIiwgXCJmaXJzdF9uYW1lXCI6IFwiRXlhbFwiLCBcImxhc3RfbmFtZVwiOiBcIk1lZWthblwiLCBcImVtYWlsXCI6IFwiZXlhbEBtZWVrYW4uY29tXCJ9In0=|1409210860|871179f93c3b00f5a3d2e3f1869f15f873e35992",
+                               NSHTTPCookieValue: @"eyJnb29nbGVfb2F1dGgyIjoie1wiZW1haWxcIjogXCJleWFsLnlhdm9yQGdtYWlsLmNvbVwiLCBcImZ1bGxfbmFtZVwiOiBcIkV5YWwgWWF2b3JcIiwgXCJpZFwiOiBcIjEwODE0Nzc1OTA0ODY2NzMzOTkwOFwiLCBcImZpcnN0X25hbWVcIjogXCJFeWFsXCIsIFwibGFzdF9uYW1lXCI6IFwiWWF2b3JcIn0iLCJfbWVzc2FnZXMiOltbIldlbGNvbWUhICBZb3UgaGF2ZSBiZWVuIHJlZ2lzdGVyZWQgYXMgYSBuZXcgdXNlciBhbmQgbG9nZ2VkIGluIHRocm91Z2ggR29vZ2xlIE9BdXRoMi4iLCJzdWNjZXNzIl1dfQ\075\075|1421942880|8fb927398fc0a74969163b43b803ce15c3044406",
                                NSHTTPCookieVersion: @"1",
                                NSHTTPCookieDomain: @"localhost"}];
     NSHTTPCookie *sessionName = [NSHTTPCookie cookieWithProperties:
                                  @{NSHTTPCookieName: @"session_name",
                                    NSHTTPCookiePath: @"/",
-                                   NSHTTPCookieValue: @"eyJfdXNlciI6WzU2Mjk0OTk1MzQyMTMxMjAsMSwiVjZtbzRsTG5yaTRLZGltSmZGUnJDcCIsMTQwOTIxMDg1OSwxNDA5MjEwODU5XX0=|1409210865|9e9d4c9fd956b061b69d9ea98f11ca68c694043d",
+                                   NSHTTPCookieValue: @"eyJfdXNlciI6WzU4Mzg0MDY3NDM0OTA1NjAsMSwiTENNQlVybE10bWJrMkVNQUNycGlsQSIsMTQyMTk0Mjg3OCwxNDIyMDk2NDg1XX0\075|1422096486|abd87fc29cbc8c13aecdd33c21d7f3f22206e85c",
                                    NSHTTPCookieVersion: @"1",
                                    NSHTTPCookieDomain: @"localhost"}];
     [[NSHTTPCookieStorage sharedHTTPCookieStorage] setCookie:session];
@@ -436,6 +520,7 @@ static BOOL hasEntered;
     details.options = [NSSet setWithObject:inAnHour];
     [self.sdk createMeeting:details onSuccess:^(MeetingServerResponse *response) {
         // Created the meeting
+        [self.danglingMeetings addObject:response.meetingId];
         [self.sdk freeBusyFor:self.connectedAccount fromDate:now untilDate:[inAnHour dateByAddingTimeInterval:[details durationInMinutes] * 60] onSuccess:^(NSArray *busyRanges) {
             BOOL foundIt = NO;
             NSDate *meetingEndTime = [inAnHour dateByAddingTimeInterval:[details durationInMinutes] * 60];

@@ -174,6 +174,13 @@ static const NSTimeInterval MAX_RANGE_FOR_FREEBUSY = THREE_MONTHS;
     if ([requestDetails.inviteesIds count]) {
         params[@"invitees"] = requestDetails.inviteesIds;
     }
+    if ([requestDetails.timezone length]) {
+        params[@"timzeone"] = requestDetails.timezone;
+    }
+    if ([requestDetails.locationLatLong length]) {
+        params[@"location_latlong"] = requestDetails.locationLatLong;
+    }
+    params[@"use_location_padding"] = requestDetails.useLocationPadding ? @1 : @0;
     endpoint.parameters = params;
     return endpoint;
 }
@@ -396,6 +403,8 @@ static const NSTimeInterval MAX_RANGE_FOR_FREEBUSY = THREE_MONTHS;
             suggestion.start = [NSDate dateWithTimeIntervalSince1970:start];
             suggestion.busyIds = [NSSet setWithArray:[suggestionFromServer objectForKey:@"not_available"]];
             suggestion.rank = [[suggestionFromServer objectForKey:@"rank"] integerValue];
+            suggestion.paddingBefore = [[suggestionFromServer objectForKey:@"padding_before"] doubleValue];
+            suggestion.paddingAfter = [[suggestionFromServer objectForKey:@"padding_after"] doubleValue];
             [suggestions addObject:suggestion];
         }
     }

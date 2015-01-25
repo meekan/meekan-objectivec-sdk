@@ -160,13 +160,18 @@ typedef NS_ENUM(NSUInteger, PollVote) {
 @interface SlotSuggestionsRequest : NSObject
 @property (nonatomic, strong) NSSet *inviteesIds;
 @property (nonatomic) NSUInteger duration;
-@property (nonatomic) NSString *organizerAccountId;
+@property (nonatomic, strong) NSString *organizerAccountId;
+@property (nonatomic, strong) NSArray *timeFrameRanges;
+@property (nonatomic, strong) NSString *locationLatLong;
+@property (nonatomic, strong) NSString *timezone;
+@property (nonatomic) BOOL useLocationPadding;
 @property (nonatomic) NSInteger page;
-@property (nonatomic) NSArray *timeFrameRanges;
 @end
 
 @interface SlotSuggestion : NSObject
 @property (nonatomic, strong) NSDate *start;
 @property (nonatomic, strong) NSSet *busyIds;
 @property (nonatomic) NSInteger rank;
+@property (nonatomic) NSTimeInterval paddingBefore;
+@property (nonatomic) NSTimeInterval paddingAfter;
 @end
