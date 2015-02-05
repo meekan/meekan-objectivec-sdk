@@ -60,3 +60,7 @@ NSString *const kMKNTimeRangeEndKey = @"end";
 @implementation SlotSuggestion
 
 @end
+
+@implementation MeetingOverview
+
+@end
