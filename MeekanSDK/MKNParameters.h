@@ -168,10 +168,18 @@ typedef NS_ENUM(NSUInteger, PollVote) {
 @property (nonatomic) NSInteger page;
 @end
 
+@interface MeetingOverview : NSObject
+@property (nonatomic, strong) NSString *meetingName;
+@property (nonatomic, strong) NSDate *start;
+@property (nonatomic) NSUInteger duration;
+@end
+
 @interface SlotSuggestion : NSObject
 @property (nonatomic, strong) NSDate *start;
 @property (nonatomic, strong) NSSet *busyIds;
 @property (nonatomic) NSInteger rank;
 @property (nonatomic) NSTimeInterval paddingBefore;
 @property (nonatomic) NSTimeInterval paddingAfter;
+@property (nonatomic, strong) MeetingOverview *meetingBefore;
+@property (nonatomic, strong) MeetingOverview *meetingAfter;
 @end

@@ -405,11 +405,26 @@ static const NSTimeInterval MAX_RANGE_FOR_FREEBUSY = THREE_MONTHS;
             suggestion.rank = [[suggestionFromServer objectForKey:@"rank"] integerValue];
             suggestion.paddingBefore = [[suggestionFromServer objectForKey:@"padding_before"] doubleValue];
             suggestion.paddingAfter = [[suggestionFromServer objectForKey:@"padding_after"] doubleValue];
+            if ([suggestionFromServer objectForKey:@"meeting_before"]) {
+                suggestion.meetingBefore = [self parseMeetingOverview:[suggestionFromServer objectForKey:@"meeting_before"]];
+            }
+            if ([suggestionFromServer objectForKey:@"meeting_after"]) {
+                suggestion.meetingAfter = [self parseMeetingOverview:[suggestionFromServer objectForKey:@"meeting_after"]];
+            }
             [suggestions addObject:suggestion];
         }
     }
     
     return suggestions;
+}
+
+-(MeetingOverview *)parseMeetingOverview:(NSDictionary *)overview {
+    MeetingOverview *meeting = [[MeetingOverview alloc]init];
+    meeting.duration = [[overview objectForKey:@"duration"] integerValue]; // Minutes
+    meeting.meetingName = [overview objectForKey:@"meeting_name"];
+    NSTimeInterval start = [[overview objectForKey:@"start"] doubleValue];
+    meeting.start = [NSDate dateWithTimeIntervalSince1970:start];
+    return meeting;
 }
 
 -(NSArray *)parseFreeBusy:(id)serverResponse andError:(NSError *__autoreleasing *)error {
