@@ -405,11 +405,13 @@ static const NSTimeInterval MAX_RANGE_FOR_FREEBUSY = THREE_MONTHS;
             suggestion.rank = [[suggestionFromServer objectForKey:@"rank"] integerValue];
             suggestion.paddingBefore = [[suggestionFromServer objectForKey:@"padding_before"] doubleValue];
             suggestion.paddingAfter = [[suggestionFromServer objectForKey:@"padding_after"] doubleValue];
-            if ([suggestionFromServer objectForKey:@"meeting_before"]) {
-                suggestion.meetingBefore = [self parseMeetingOverview:[suggestionFromServer objectForKey:@"meeting_before"]];
+            id before = [suggestionFromServer objectForKey:@"meeting_before"] ;
+            if (before && before != [NSNull null]) {
+                suggestion.meetingBefore = [self parseMeetingOverview:before];
             }
-            if ([suggestionFromServer objectForKey:@"meeting_after"]) {
-                suggestion.meetingAfter = [self parseMeetingOverview:[suggestionFromServer objectForKey:@"meeting_after"]];
+            id after = [suggestionFromServer objectForKey:@"meeting_after"];
+            if (after && after != [NSNull null]) {
+                suggestion.meetingAfter = [self parseMeetingOverview:after];
             }
             [suggestions addObject:suggestion];
         }
