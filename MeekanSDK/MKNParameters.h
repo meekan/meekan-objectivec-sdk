@@ -132,6 +132,7 @@ typedef NS_ENUM(NSUInteger, PollVote) {
 
 @interface MeetingFromServer : NSObject
 @property (nonatomic, strong) NSDate *lastUpdate;
+@property (nonatomic, strong) NSDate *createTime;
 @property (nonatomic, strong) NSString *meetingId;
 @property (nonatomic) BOOL isDeleted;
 @property (nonatomic, strong) MeetingDetails *details;

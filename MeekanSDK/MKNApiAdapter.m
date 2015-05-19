@@ -297,6 +297,10 @@ static const NSTimeInterval MAX_RANGE_FOR_FREEBUSY = THREE_MONTHS;
             NSTimeInterval lastUpdate = [[meeting objectForKey:@"last_update"] doubleValue];
             fromServer.lastUpdate = [NSDate dateWithTimeIntervalSince1970:lastUpdate];
         }
+        if ([meeting objectForKey:@"create_time"]) {
+            NSTimeInterval lastUpdate = [[meeting objectForKey:@"create_time"] doubleValue];
+            fromServer.createTime = [NSDate dateWithTimeIntervalSince1970:lastUpdate];
+        }
         fromServer.meetingId = [meeting objectForKey:@"id"];
         fromServer.isDeleted = [[meeting objectForKey:@"is_deleted"] boolValue];
         fromServer.remoteIds = [self parseRemoteEventsFrom:meeting];
