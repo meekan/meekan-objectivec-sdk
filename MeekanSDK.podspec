@@ -39,7 +39,7 @@ Pod::Spec.new do |s|
   #
 
   s.name         = "MeekanSDK"
-  s.version      = "1.0.4"
+  s.version      = "1.0.5"
   s.summary      = "Wrapper for Meekan's REST API - Schedule meetings easily."
 
   s.description  = <<-DESC
@@ -100,7 +100,7 @@ Pod::Spec.new do |s|
   #  Supports git, hg, bzr, svn and HTTP.
   #
 
-  s.source       = { :git => "https://github.com/meekan/meekan-objectivec-sdk.git", :tag => "1.0.4" }
+  s.source       = { :git => "https://github.com/meekan/meekan-objectivec-sdk.git", :tag => "1.0.5" }
 
 
   # ――― Source Code ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
